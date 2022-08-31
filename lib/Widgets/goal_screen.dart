@@ -5,13 +5,15 @@ import 'package:flutter_redux/flutter_redux.dart';
 
 import '../Model/goal.dart';
 import '../State/app_state.dart';
+import '../Widgets/add_goal_button.dart';
 
 
 class GoalScreen extends StatelessWidget {
   
   final Store store;
+  final Function TrackGoalFunction;
 
-  const GoalScreen({required this.store});
+  const GoalScreen({required this.store, required this.TrackGoalFunction});
 
   @override
   Widget build(BuildContext context) {
@@ -25,15 +27,20 @@ class GoalScreen extends StatelessWidget {
               builder: (context, items) {
                 return Expanded(
                   child: ListView.builder(
-                    itemCount: items.length,
+                    itemCount: items.length + 1,
                     itemBuilder: (context, index) {
-                      final item = items.elementAt(index);
-                      return GoalBox(goal: item);
+                      if(index < items.length)
+                      {
+                        final item = items.elementAt(index);
+                        return GoalBox(goal: item, onBoxClick: TrackGoalFunction, store: store);
+                      }
+                      return AddGoalButton();
                     },
                   ),
                 );
               },
             ),
+            
         ],
       ),
     );

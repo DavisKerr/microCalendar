@@ -1,0 +1,2 @@
+- Change Goal Progress to a linked list holding the object. This will make inserting and removing progress very fast.
+It will not suffer much in search performance because it is more than likely that every element will have to be displayed anyway.

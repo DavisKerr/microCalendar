@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import './goal_progress.dart';
+
 enum PeriodUnit {day, week, month}
 
 @immutable
 class Goal {
   final String goalName;
   final String goalVerb;
-  final int goalQuantity;
+  final double goalQuantity;
   final String goalUnits;
   final PeriodUnit goalPeriod;
   final Duration goalDuration;
-  final String goalStartDate; // Change Back to DateTime
-  final String goalEndDate; // Change Back to DateTime
+  final String goalStartDate; 
+  final String goalEndDate; 
+  final Iterable<GoalProgress>? progress;
   final Object? subGoal;
   final String? goalContext;
-  final int? progress;
+  final int goalId;
 
   const Goal({
     required this.goalName,
@@ -26,6 +29,7 @@ class Goal {
     required this.goalDuration,
     required this.goalStartDate,
     required this.goalEndDate,
+    required this.goalId,
     this.subGoal,
     this.goalContext,
     this.progress

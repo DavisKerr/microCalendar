@@ -3,10 +3,13 @@ import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
 
+import 'Model/goal.dart';
+
 import 'Widgets/goal_screen.dart';
 import 'Reducers/Reducer.dart';
 import 'State/app_state.dart';
 import 'Styles/app_themes.dart';
+import 'package:micro_calendar/Widgets/track_goal_popup.dart';
 
 
 void main() {
@@ -19,16 +22,26 @@ void main() {
   );
 }
 
-
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
 
+class _HomePageState extends State<HomePage> {
+
+  void _startGoalTracker(BuildContext ctx, Store store, Goal goal) {
+    showDialog(context: context,
+      builder: (BuildContext context) {
+        return TrackGoalPopup(store: store, goal: goal);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final store = Store(
-      reducer,
+      appStateReducer,
       initialState: const AppState.test(),
     );
     return Scaffold(
@@ -43,10 +56,11 @@ class HomePage extends StatelessWidget {
       ),
       body: StoreProvider(
         store: store,
-        child: GoalScreen(store: store),
+        child: GoalScreen(store: store, TrackGoalFunction: _startGoalTracker),
       )
     );
   }
 }
+
 
 

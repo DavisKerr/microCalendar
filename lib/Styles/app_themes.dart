@@ -9,11 +9,14 @@ abstract class AppThemes {
     cardColor: const Color.fromARGB(255, 229, 203, 159),
     textTheme: const TextTheme(
       titleMedium: TextStyle(
-      fontFamily: 'OpenSans', 
-      fontWeight: FontWeight.w400,
-      fontSize: 23,
-
-    ),
+        fontFamily: 'OpenSans', 
+        fontWeight: FontWeight.w400,
+        fontSize: 23,
+      ),
+      labelMedium: const TextStyle(
+        fontFamily: 'OpenSans', 
+        fontSize: 16,
+      ),
     ).apply(
       bodyColor: Colors.black,
     )
