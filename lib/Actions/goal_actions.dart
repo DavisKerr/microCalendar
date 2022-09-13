@@ -17,3 +17,8 @@ class AddGoalProgressAction extends GoalAction {
   const AddGoalProgressAction(Goal goal, this.newProgress) : super(goal); 
 }
 
+@immutable 
+class DeleteGoalAction extends GoalAction {
+  const DeleteGoalAction(Goal goal) : super(goal);
+}
+

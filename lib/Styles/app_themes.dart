@@ -7,19 +7,25 @@ abstract class AppThemes {
       color: Color.fromARGB(255, 104, 167, 173),
     ),
     cardColor: const Color.fromARGB(255, 229, 203, 159),
-    textTheme: const TextTheme(
+    textTheme: TextTheme(
       titleMedium: TextStyle(
         fontFamily: 'OpenSans', 
         fontWeight: FontWeight.w400,
         fontSize: 23,
       ),
-      labelMedium: const TextStyle(
+      labelSmall: TextStyle(
+        fontFamily: 'OpenSans',
+        fontSize: 14,
+
+      ),
+      labelMedium: TextStyle(
         fontFamily: 'OpenSans', 
         fontSize: 16,
       ),
     ).apply(
       bodyColor: Colors.black,
-    )
+    ),
+    
   );
       
 }

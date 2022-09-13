@@ -14,6 +14,13 @@ extension AddRemoveItemSorted<T> on Iterable<T> {
   Iterable<T> operator -(T other) => where((element) => element != other);
 }
 
+Iterable<Goal> deleteGoal(
+  Iterable<Goal> previousItems,
+  DeleteGoalAction action,
+) {
+  return previousItems.where((Goal e) => e.goalId != action.goal.goalId);
+}
+
 Iterable<Goal> updateGoalProgress(
   Iterable<Goal> previousItems,
   AddGoalProgressAction action,
@@ -41,12 +48,15 @@ Iterable<Goal> updateGoalProgress(
   });
 }
 
-Iterable<Goal> addGoalProgressReducer(
+Iterable<Goal> modifyGoalListReducer(
   AppState oldAppState,
   Action action,
 ) {
   if(action is AddGoalProgressAction) {
     return updateGoalProgress(oldAppState.goalList, action);
+  }
+  else if(action is DeleteGoalAction){
+    return deleteGoal(oldAppState.goalList, action);
   }
   else {
     return oldAppState.goalList;
@@ -57,5 +67,5 @@ AppState appStateReducer(
   AppState oldAppState,
   action
 ) => AppState(
-  goalList: addGoalProgressReducer(oldAppState, action)
+  goalList: modifyGoalListReducer(oldAppState, action)
 );

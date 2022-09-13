@@ -15,10 +15,14 @@ import '../Widgets/horizontal_progress_bar.dart';
 class GoalBox extends StatelessWidget {
 
   final Goal goal;
-  final Function onBoxClick;
+  final Function onGoalBoxClick;
+  final Function onGoalBoxLongClick;
   final Store store;
 
-  GoalBox({required this.goal, required this.onBoxClick, required this.store});
+  GoalBox({required this.goal, 
+    required this.onGoalBoxClick, 
+    required this.onGoalBoxLongClick, 
+    required this.store, });
 
   int daysLeft(String endString)
   {
@@ -29,6 +33,7 @@ class GoalBox extends StatelessWidget {
     return (end.difference(now).inHours / 24).round();
   }
 
+
   double calculateProgress(Goal goal)
   {
     return goal.progress!.fold(0.0, (double prev, GoalProgress element) => prev + element.progress);
@@ -37,8 +42,8 @@ class GoalBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {onBoxClick(context, store, goal);},
-      onLongPress: () {print("Long Press!");},
+      onTap: () {onGoalBoxClick(context, store, goal);},
+      onLongPress: () {onGoalBoxLongClick(context, store, goal);},
       child: Container(
         height: 150,
         child: Card(

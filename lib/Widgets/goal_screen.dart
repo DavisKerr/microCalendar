@@ -11,9 +11,10 @@ import '../Widgets/add_goal_button.dart';
 class GoalScreen extends StatelessWidget {
   
   final Store store;
-  final Function TrackGoalFunction;
+  final Function trackGoalFunction;
+  final Function editGoalFunction;
 
-  const GoalScreen({required this.store, required this.TrackGoalFunction});
+  const GoalScreen({required this.store, required this.trackGoalFunction, required this.editGoalFunction});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +33,11 @@ class GoalScreen extends StatelessWidget {
                       if(index < items.length)
                       {
                         final item = items.elementAt(index);
-                        return GoalBox(goal: item, onBoxClick: TrackGoalFunction, store: store);
+                        return GoalBox(
+                          goal: item, 
+                          onGoalBoxClick: trackGoalFunction, 
+                          onGoalBoxLongClick: editGoalFunction,
+                          store: store);
                       }
                       return AddGoalButton();
                     },

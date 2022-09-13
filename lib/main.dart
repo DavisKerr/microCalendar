@@ -5,11 +5,13 @@ import 'package:intl/intl.dart';
 
 import 'Model/goal.dart';
 
+import 'package:micro_calendar/Widgets/confirmation_window.dart';
 import 'Widgets/goal_screen.dart';
 import 'Reducers/Reducer.dart';
 import 'State/app_state.dart';
 import 'Styles/app_themes.dart';
 import 'package:micro_calendar/Widgets/track_goal_popup.dart';
+import 'package:micro_calendar/Widgets/edit_delete_goal_popup.dart';
 
 
 void main() {
@@ -38,6 +40,15 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void _startGoalEditor(BuildContext ctx, Store store, Goal goal) {
+    showDialog(context: context,
+      builder: (BuildContext context) {
+        return EditDeleteGoalPopup(store: store, goal: goal);
+    });
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     final store = Store(
@@ -56,7 +67,7 @@ class _HomePageState extends State<HomePage> {
       ),
       body: StoreProvider(
         store: store,
-        child: GoalScreen(store: store, TrackGoalFunction: _startGoalTracker),
+        child: GoalScreen(store: store, trackGoalFunction: _startGoalTracker, editGoalFunction: _startGoalEditor,),
       )
     );
   }

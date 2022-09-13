@@ -1,2 +1,50 @@
+Features:
+
+    Goal Screen:
+        [] Screen Exists
+            [X] Goals appear as boxes
+            [] Top and bottom Navigation exist and work as expected
+            [] Goal screen is responsive and looks good on all devices
+        [] Goal Boxes exist 
+            [X] Goal Boxes display the Goal title
+            [] Goal Boxes display the number of periods left in the goal
+            [X] Goal boxes show progress bars and percentage complete
+            [] Goal boxes are responsive and look good on all devices
+            [X] short clicking on a goal will open a tracker popup screen.
+            [] long clicking and holding on a goal will darken the color
+            [] when a long click is released the goals will shake (and turn back to orignal color)
+            [] When a long click is released, a "done editing" button is put at the top of the screen.
+            [] shaking goals have an edit button
+            [] Dragging shaking goals will reorder them
+            [] When done is clicked the order will save and the blocks will stop shaking. 
+            [] Clicking the edit button opens the edit menu.
+        [] Goal Tracker popup exists
+            [X] goal tracker popup screen has the goal name as the title. 
+            [X] goal tracker screen allows for entering a number for the number of units completed.
+            [] goal tracker screen also shows the name of the units used for the goal.
+            [X] goal tracker screen shows the date to record for.
+            [X] goal tracker screen lets the user change the date for tracking. 
+            [X] goal tracker screen submit button updates the progress on the goal and the date submitted. 
+            [] goal tracker screen shows an error if invalid or no input is provided upon submission.
+            [] goal tracker input is safe to be processed.
+            [X] goal tracker screen closes if cancel is clicked or the screen is clicked off of. 
+            [] Goal tracker screen is responsive and looks good on all devices.
+        [] Goal edit menu
+            [X] Goal name is present as the title
+            [X] There is a field for goal name that already has the existing name present.
+            [X] There is a field for the goal verb that already has the existing verb present.
+            [X] There is a field for the goal quantity that already has the existing quantity present.
+            [X] There is a field for the goal units that already has the existing units present.
+            [X] There is a dropdown for the goal period that already has the existing period present.
+            [X] There is a section for choosing the end date that defaults to the existing end date.
+            [] Clicking confirm updates the goal. (Not the previous tracking.)
+            [] Clicking cancel or off of the edit screen closes the menu.
+            [X] Clicking the delete button opens an additional dialogue to confirm
+            [X] confirmed deletes actually deletes the goal. 
+            [] Goal Tracker Screen is responsive and looks good on all devices. 
+
+
+Next Major Goal:
+
 - Change Goal Progress to a linked list holding the object. This will make inserting and removing progress very fast.
 It will not suffer much in search performance because it is more than likely that every element will have to be displayed anyway.
