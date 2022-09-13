@@ -77,15 +77,22 @@ class _EditDeleteGoalPopupState extends State<EditDeleteGoalPopup> {
         });
   }
 
-  void _submitForm(double units, String date)
+  void _submitForm()
   {
-    // widget.store.dispatch(
-    //   AddGoalProgressAction(widget.goal, 
-    //     GoalProgress(progress: double.parse(amountController.text) as double, 
-    //     dateString: _selectedDate == null ?  DateFormat.yMd().format(DateTime.now()) : DateFormat.yMd().format(_selectedDate!))
-    //   )
-    // );
-    // Navigator.of(context).pop();
+    Goal goal = Goal(
+      goalName: nameController.text,
+      goalVerb: verbController.text,
+      goalQuantity: double.parse(quantityController.text),
+      goalUnits: unitsController.text,
+      goalStartDate: widget.goal.goalStartDate,
+      goalEndDate: _goalEndDate.toString(),
+      goalPeriod: _periodController!,
+      goalId: widget.goal.goalId,
+    );
+    widget.store.dispatch(
+      ModifyGoalAction(goal)
+    );
+    Navigator.of(context).pop();
   }
 
   
@@ -93,10 +100,10 @@ class _EditDeleteGoalPopupState extends State<EditDeleteGoalPopup> {
   @override
   Widget build(BuildContext context) {
 
-    nameController.text = widget.goal.goalName;
-    verbController.text = widget.goal.goalVerb;
-    quantityController.text = widget.goal.goalQuantity.toString();
-    unitsController.text = widget.goal.goalUnits;
+    nameController.text = nameController.text == '' ? widget.goal.goalName : nameController.text;
+    verbController.text = verbController.text == '' ? widget.goal.goalVerb : verbController.text;
+    quantityController.text = quantityController.text == '' ? widget.goal.goalQuantity.toString() : quantityController.text;
+    unitsController.text = unitsController.text == '' ? widget.goal.goalUnits : unitsController.text;
     _goalEndDate = _goalEndDate != null ? _goalEndDate : DateTime.parse(widget.goal.goalEndDate);
     _periodController = _periodController != null ? _periodController : widget.goal.goalPeriod;
     const List<String> periodController = <String>['Day', 'Month', 'Year'];
@@ -160,8 +167,8 @@ class _EditDeleteGoalPopupState extends State<EditDeleteGoalPopup> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    ElevatedButton(onPressed: () {}, child: Text("Cancel")),
-                    ElevatedButton(onPressed: () {}, child: Text("Confirm")),
+                    ElevatedButton(onPressed: () {Navigator.of(context).pop();}, child: Text("Cancel")),
+                    ElevatedButton(onPressed: _submitForm, child: Text("Confirm")),
                   ],
                 ),
                 SizedBox(height: 5),

@@ -59,12 +59,12 @@ class _TrackGoalPopupState extends State<TrackGoalPopup> {
       scrollable: true,
       title: Text(widget.goal.goalName),
       content: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(2.0),
         child: Column(
           children: <Widget>[
             Row(
               children: <Widget>[
-                const Text("Completed", style: TextStyle(fontSize: 16),),
+                const Text("Completed", style: TextStyle(fontSize: 14),),
                 const SizedBox(width: 4), 
                 Container(
                   width: 100,
@@ -75,7 +75,7 @@ class _TrackGoalPopupState extends State<TrackGoalPopup> {
                   
                   ),
                 ),
-                Text(widget.goal.goalUnits, style: TextStyle(fontSize: 16),)
+                Text(widget.goal.goalUnits + "(s)", style: TextStyle(fontSize: 14),)
               ],
             ),
             const SizedBox(height: 25),

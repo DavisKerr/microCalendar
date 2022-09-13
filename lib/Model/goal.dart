@@ -12,7 +12,6 @@ class Goal {
   final double goalQuantity;
   final String goalUnits;
   final PeriodUnit goalPeriod;
-  final Duration goalDuration;
   final String goalStartDate; 
   final String goalEndDate; 
   final Iterable<GoalProgress>? progress;
@@ -26,7 +25,6 @@ class Goal {
     required this.goalQuantity,
     required this.goalUnits,
     required this.goalPeriod,
-    required this.goalDuration,
     required this.goalStartDate,
     required this.goalEndDate,
     required this.goalId,

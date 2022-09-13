@@ -22,3 +22,8 @@ class DeleteGoalAction extends GoalAction {
   const DeleteGoalAction(Goal goal) : super(goal);
 }
 
+@immutable 
+class ModifyGoalAction extends GoalAction {
+  const ModifyGoalAction(Goal goal) : super(goal);
+}
+

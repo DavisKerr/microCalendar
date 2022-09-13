@@ -36,13 +36,37 @@ Iterable<Goal> updateGoalProgress(
         goalPeriod: action.goal.goalPeriod,
         goalStartDate: action.goal.goalStartDate,
         goalEndDate: action.goal.goalEndDate,
-        goalDuration: action.goal.goalDuration, 
         progress: action.goal.progress! + action.newProgress,
         goalId: action.goal.goalId,
       );
     }
     else
     {
+      return e;
+    }
+  });
+}
+
+Iterable<Goal> editGoal(
+  Iterable<Goal> previousItems,
+  ModifyGoalAction action
+) {
+  return previousItems.map((Goal e) {
+    if(e.goalId == action.goal.goalId)
+    {
+      return Goal(
+        goalName: action.goal.goalName,
+        goalVerb: action.goal.goalVerb,
+        goalQuantity: action.goal.goalQuantity,
+        goalUnits: action.goal.goalUnits,
+        goalPeriod: action.goal.goalPeriod,
+        goalStartDate: e.goalStartDate,
+        goalEndDate: action.goal.goalEndDate,
+        progress: e.progress,
+        goalId: e.goalId,
+      );
+    }
+    else {
       return e;
     }
   });
@@ -55,8 +79,11 @@ Iterable<Goal> modifyGoalListReducer(
   if(action is AddGoalProgressAction) {
     return updateGoalProgress(oldAppState.goalList, action);
   }
-  else if(action is DeleteGoalAction){
+  else if(action is DeleteGoalAction) {
     return deleteGoal(oldAppState.goalList, action);
+  }
+  else if(action is ModifyGoalAction) {
+    return editGoal(oldAppState.goalList, action);
   }
   else {
     return oldAppState.goalList;
