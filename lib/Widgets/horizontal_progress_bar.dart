@@ -20,27 +20,30 @@ class HorizontalProgressBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 25, top: 10),
-      child: Row(
-        children: <Widget>[
-          Container(
-            height: 30,
-            width: 40,
-            child: FittedBox(
-              child: Text('${(getPercentage() * 100).toString()}%',)
-              ),
-          ),
-          SizedBox(width: 10,),
-          Container(
-            height: 20,
-            width: 280,
-            child: LinearProgressIndicator(
-              value: getPercentage(),
+    return LayoutBuilder(builder: ((context, constraints) => 
+      Container(
+        margin: EdgeInsets.only(bottom: 25, top: 10),
+        child: Row(
+          children: <Widget>[
+            Container(
+              height: 30,
+              width: constraints.maxWidth * 0.1,
+              child: FittedBox(
+                child: Text('${(getPercentage() * 100).toString()}%',)
+                ),
             ),
-          ),
-        ],
-      ),
-    );
+            SizedBox(width: 10,),
+            Container(
+              height: 20,
+              width: constraints.maxWidth * 0.8,
+              child: LinearProgressIndicator(
+                value: getPercentage(),
+              ),
+            ),
+          ],
+        ),
+      )
+    ));
+    
   }
 }

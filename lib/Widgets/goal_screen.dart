@@ -13,8 +13,17 @@ class GoalScreen extends StatelessWidget {
   final Store store;
   final Function trackGoalFunction;
   final Function editGoalFunction;
+  final Function changeToCreateGoalScreen;
+  final double maxHeight;
+  final double maxWidth;
 
-  const GoalScreen({required this.store, required this.trackGoalFunction, required this.editGoalFunction});
+  const GoalScreen({
+    required this.store, 
+    required this.trackGoalFunction, 
+    required this.editGoalFunction, 
+    required this.maxHeight,
+    required this.maxWidth,
+    required this.changeToCreateGoalScreen});
 
   @override
   Widget build(BuildContext context) {
@@ -26,20 +35,27 @@ class GoalScreen extends StatelessWidget {
           StoreConnector<AppState, Iterable<Goal>>(
               converter: (store) => store.state.goalList,
               builder: (context, items) {
-                return Expanded(
+                return Container(
+                  height: maxHeight * 0.85,
+                  width: maxWidth * 0.9,
                   child: ListView.builder(
                     itemCount: items.length + 1,
                     itemBuilder: (context, index) {
                       if(index < items.length)
                       {
                         final item = items.elementAt(index);
-                        return GoalBox(
-                          goal: item, 
-                          onGoalBoxClick: trackGoalFunction, 
-                          onGoalBoxLongClick: editGoalFunction,
-                          store: store);
+                        return Container(
+                          //height: (maxHeight * 0.85) * 0.20,
+                          child: GoalBox(
+                            goal: item, 
+                            onGoalBoxClick: trackGoalFunction, 
+                            onGoalBoxLongClick: editGoalFunction,
+                            store: store,
+                            maxWidth: maxWidth, 
+                            maxHeight: maxHeight),
+                        );
                       }
-                      return AddGoalButton();
+                      return AddGoalButton(changeToGoalScreen: changeToCreateGoalScreen, store: store);
                     },
                   ),
                 );

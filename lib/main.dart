@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:micro_calendar/Screens/create_goal_screen.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
@@ -47,27 +48,42 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void _changeToGoalCreateScreen(BuildContext ctx, Store store)
+  {
+    Navigator.of(ctx).push(MaterialPageRoute(builder: (_) {
+      return CreateGoalScreen(store: store);
+    }));
+  }
+
 
 
   @override
   Widget build(BuildContext context) {
+    AppBar appBar = AppBar(
+      leading: IconButton(icon: Icon(Icons.arrow_left), onPressed: () {}),
+      title: const Text('Calendar Name', style: TextStyle(fontFamily: 'OpenSans')),
+      centerTitle: true, 
+      actions: <Widget>[
+        IconButton(icon: Icon(Icons.menu), onPressed: () {},),
+        IconButton(icon: Icon(Icons.arrow_right), onPressed: () {}),
+      ],
+    );
     final store = Store(
       appStateReducer,
       initialState: const AppState.test(),
     );
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(icon: Icon(Icons.arrow_left), onPressed: () {}),
-        title: const Text('Calendar Name', style: TextStyle(fontFamily: 'OpenSans')),
-        centerTitle: true, 
-        actions: <Widget>[
-          IconButton(icon: Icon(Icons.menu), onPressed: () {},),
-          IconButton(icon: Icon(Icons.arrow_right), onPressed: () {}),
-        ],
-      ),
+      appBar: appBar,
       body: StoreProvider(
         store: store,
-        child: GoalScreen(store: store, trackGoalFunction: _startGoalTracker, editGoalFunction: _startGoalEditor,),
+        child: GoalScreen(
+          store: store, 
+          trackGoalFunction: _startGoalTracker, 
+          editGoalFunction: _startGoalEditor, 
+          maxHeight: MediaQuery.of(context).size.height - appBar.preferredSize.height,
+          maxWidth: MediaQuery.of(context).size.width,
+          changeToCreateGoalScreen: _changeToGoalCreateScreen,
+        ),
       )
     );
   }

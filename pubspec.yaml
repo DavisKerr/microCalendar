@@ -38,6 +38,7 @@ dependencies:
   flutter_redux: ^0.10.0
   intl: ^0.17.0
   wheel_chooser: ^1.0.0
+  carousel_slider: ^4.1.1
 
 dev_dependencies:
   flutter_test:
