@@ -2,26 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:micro_calendar/Widgets/back_and_next_buttons.dart';
 import 'package:micro_calendar/Widgets/screen_tracker_indicators.dart';
 
-import '../Styles/app_themes.dart' as appStyle;
+import '../../Styles/app_themes.dart' as appStyle;
 
-class CreateGoalFormVerb extends StatefulWidget {
+class CreateGoalFormExample extends StatelessWidget {
   final int totalPages;
   final int pageNumber;
   final Function nextPage;
   final Function previousPage;
   
-  const CreateGoalFormVerb({
+  const CreateGoalFormExample({
     required this.totalPages, 
     required this.pageNumber, 
     required this.nextPage,
     required this.previousPage,
     });
 
-  @override
-  State<CreateGoalFormVerb> createState() => _CreateGoalFormVerbState();
-}
 
-class _CreateGoalFormVerbState extends State<CreateGoalFormVerb> {
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -29,8 +26,23 @@ class _CreateGoalFormVerbState extends State<CreateGoalFormVerb> {
       child: Column(
         children: <Widget> [
           Text(
-            '''Let’s start with a goal verb. This is the “what” of your goal. You can also add a “don’t” to your verb to make it a goal to not go over. ''',
+            '''An example goal statment might look like: ''',
             style: Theme.of(context).textTheme.titleMedium,
+            textAlign: TextAlign.center,
+          ),
+          Text(
+            '''Read 30 minutes each day for the next three months''',
+            style: Theme.of(context).textTheme.displayMedium,
+            textAlign: TextAlign.center,
+          ),
+          Text(
+            '''or''',
+            style: Theme.of(context).textTheme.titleMedium,
+            textAlign: TextAlign.center,
+          ),
+          Text(
+            '''Don't spend more than 30 every day on YouTube''',
+            style: Theme.of(context).textTheme.displayMedium,
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 50),
@@ -44,8 +56,10 @@ class _CreateGoalFormVerbState extends State<CreateGoalFormVerb> {
               ),
           ),
           SizedBox(height: 50),
-          BackAndNextButtons(onBackClicked: widget.previousPage, onNextClicked: widget.nextPage),
-          ScreenTrackerIndicators(numPages: widget.totalPages, currentPage: widget.pageNumber),
+          BackAndNextButtons(onBackClicked: previousPage, onNextClicked: nextPage),
+          
+          
+          ScreenTrackerIndicators(numPages: totalPages, currentPage: pageNumber),
         ]
       )
     );

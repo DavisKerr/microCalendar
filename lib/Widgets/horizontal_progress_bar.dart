@@ -1,22 +1,9 @@
 import 'package:flutter/material.dart';
 
 class HorizontalProgressBar extends StatelessWidget {
-  final double total;
-  final double? current;
+  final double percentage;
 
-  const HorizontalProgressBar({required this.total, required this.current});
-
-  double getPercentage()
-  {
-    if(current == null)
-    {
-      return 0;
-    }
-    else
-    {
-      return current! / total;
-    }
-  }
+  const HorizontalProgressBar({required this.percentage});
 
   @override
   Widget build(BuildContext context) {
@@ -29,15 +16,16 @@ class HorizontalProgressBar extends StatelessWidget {
               height: 30,
               width: constraints.maxWidth * 0.1,
               child: FittedBox(
-                child: Text('${(getPercentage() * 100).toString()}%',)
+                child: Text('${(/*(current/total)*/ percentage * 100).toStringAsFixed(0)}%',
                 ),
+              ),
             ),
             SizedBox(width: 10,),
             Container(
               height: 20,
               width: constraints.maxWidth * 0.8,
               child: LinearProgressIndicator(
-                value: getPercentage(),
+                value: percentage//current/total,
               ),
             ),
           ],

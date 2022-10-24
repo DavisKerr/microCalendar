@@ -3,8 +3,7 @@ import 'package:redux/redux.dart';
 
 class AddGoalButton extends StatelessWidget {
   final Function changeToGoalScreen;
-  final Store store;
-  const AddGoalButton({required this.changeToGoalScreen, required this.store});
+  const AddGoalButton({required this.changeToGoalScreen});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +12,7 @@ class AddGoalButton extends StatelessWidget {
       child: Card(
         color: Color.fromARGB(255, 239, 239, 239),
         margin: EdgeInsets.all(20),
-        child: OutlinedButton(onPressed: (){changeToGoalScreen(context, store);}, child: Icon(Icons.add)),
+        child: OutlinedButton(onPressed: (){changeToGoalScreen(context);}, child: Icon(Icons.add)),
       ),
     );
   }

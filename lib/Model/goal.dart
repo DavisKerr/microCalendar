@@ -14,10 +14,12 @@ class Goal {
   final PeriodUnit goalPeriod;
   final String goalStartDate; 
   final String goalEndDate; 
-  final Iterable<GoalProgress>? progress;
   final Object? subGoal;
   final String? goalContext;
   final int goalId;
+  final Iterable<GoalProgress> goalProgress;
+  final double progressPercentage;
+  final int nextProgressId;
 
   const Goal({
     required this.goalName,
@@ -28,9 +30,11 @@ class Goal {
     required this.goalStartDate,
     required this.goalEndDate,
     required this.goalId,
+    required this.progressPercentage,
+    this.goalProgress = const Iterable.empty(),
+    this.nextProgressId = 0,
     this.subGoal,
     this.goalContext,
-    this.progress
   });
 
   @override 

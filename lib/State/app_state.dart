@@ -9,13 +9,19 @@ import 'package:intl/intl.dart';
 @immutable
 class AppState {
   final Iterable<Goal> goalList;
+  final int nextGoalId;
+  final bool signedIn;
+  final String username;
 
   const AppState({
-    required this.goalList
+    required this.goalList,
+    this.nextGoalId = 0,
+    this.signedIn = false,
+    this.username = ""
   });
 
   const AppState.empty() 
-    : goalList = const <Goal>[];
+    : goalList =  const <Goal>[], nextGoalId = 0, signedIn = false, username = '';
 
   const AppState.test()
     : goalList = const <Goal>[
@@ -26,9 +32,9 @@ class AppState {
         goalUnits: "Units",
         goalPeriod: PeriodUnit.day,
         goalStartDate: "2022-04-20 00:00:00",
-        goalEndDate: "2022-12-15 23:59:99.99",
-        progress: [GoalProgress(progress: 1, dateString: '2022-04-23 12:23:04'), GoalProgress(progress: 2, dateString: '2022-04-24 12:20:07')],
+        goalEndDate: "2022-12-15 00:00:00",
         goalId: 0,
+        progressPercentage: 0.0,
       ), 
       Goal(
         goalName: "Goal Name",
@@ -37,9 +43,13 @@ class AppState {
         goalUnits: "Units",
         goalPeriod: PeriodUnit.day,
         goalStartDate: "2022-04-20 00:00:00",
-        goalEndDate: "2022-12-15 23:59:99.99",
-        progress: [GoalProgress(progress: 5, dateString: '2022-04-21 12:23:04'), GoalProgress(progress: 2, dateString: '2022-04-22 12:20:07')],
+        goalEndDate: "2022-12-15 00:00:00",
         goalId: 1,
+        progressPercentage: 0.0,
       )
-    ];
+    ], 
+    nextGoalId = 2,
+    signedIn = false,
+    username = "";
+    
 }

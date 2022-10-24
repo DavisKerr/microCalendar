@@ -7,9 +7,10 @@ import '../Actions/goal_actions.dart';
 
 import 'package:redux/redux.dart';
 
+import '../View/view_model.dart';
+
 class ConfirmationWindow extends StatefulWidget {
   final Function onConfirmAction;
-
   const ConfirmationWindow({required this.onConfirmAction});
 
   @override
@@ -20,7 +21,7 @@ class _ConfirmationWindowState extends State<ConfirmationWindow> {
 
   void _submitForm()
   {
-    widget.onConfirmAction();
+    widget.onConfirmAction(context);
     Navigator.of(context).pop();
   }
 

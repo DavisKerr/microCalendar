@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:micro_calendar/SpawnPopups/spawn_popups.dart';
+import 'package:micro_calendar/View/view_model.dart';
 import 'package:micro_calendar/Widgets/text_popup_menu.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -13,32 +14,42 @@ class LargeGoalMenuButton extends StatelessWidget {
   final double width;
   final Goal goal;
   final Function trackGoal;
-  final Function editGoal;
-  final Store store;
+  final Function viewActivityLog;
+  final ViewModel viewModel;
 
   const LargeGoalMenuButton({
     required this.height, 
     required this.width, 
-    required this.trackGoal, 
-    required this.editGoal,
     required this.goal,
-    required this.store,
+    required this.trackGoal,
+    required this.viewActivityLog,
+    required this.viewModel
   });
 
   _openTrackerMenu(BuildContext context)
   {
     Navigator.of(context).pop();
-    trackGoal(context, store, goal);
+    startGoalTracker(context, goal, trackGoal, DateTime.now(), (){});
     showDialog(context: context,
       builder: (BuildContext context) {
         return Container();
     });
   }
 
-    _openEditorMenu(BuildContext context)
+  _openEditorMenu(BuildContext context)
   {
     Navigator.of(context).pop();
-    editGoal(context, store, goal);
+    startGoalEditor(context, goal, viewModel);
+    showDialog(context: context,
+      builder: (BuildContext context) {
+        return Container();
+    });
+  }
+
+  _openActivityLog(BuildContext context)
+  {
+    Navigator.of(context).pop();
+    viewActivityLog(context, goal);
     showDialog(context: context,
       builder: (BuildContext context) {
         return Container();
@@ -48,17 +59,15 @@ class LargeGoalMenuButton extends StatelessWidget {
   _openDeleteGoalConfirmationWindow(BuildContext context)
   {
     Navigator.of(context).pop();
-    startConfirmationWindow(context, store, goal, _deleteGoal);
+    startConfirmationWindow(context, goal, _deleteGoal);
     showDialog(context: context,
       builder: (BuildContext context) {
         return Container();
     });
   }
 
-  void _deleteGoal(){
-    store.dispatch(
-      DeleteGoalAction(goal,)
-    );
+  void _deleteGoal(BuildContext context) {
+    viewModel.deleteGoal(goal);
   }
 
   @override
@@ -90,8 +99,9 @@ class LargeGoalMenuButton extends StatelessWidget {
               ),
             ),
             const PopupMenuDivider(),
-            const PopupMenuItem(
-              child: ListTile(
+            PopupMenuItem(
+              onTap: () {_openActivityLog(context);},
+              child: const ListTile(
                 leading: Icon(Icons.view_agenda),
                 title: Text('Activity Log'),
               ),
@@ -107,19 +117,5 @@ class LargeGoalMenuButton extends StatelessWidget {
         ),
       ),
     );
-    // return GestureDetector(
-    //   onTapDown: (TapDownDetails details) => _startPopupMenu(context, details.globalPosition),
-    //   child: Card(
-    //     margin: EdgeInsets.all(0),
-    //     color: Color.fromARGB(100, 236, 234, 231),
-    //     elevation: 0,
-    //     child: Container(
-    //       width: width,
-    //       height: 150,
-    //       padding: EdgeInsets.only(top: 20, bottom: 20),
-    //         child: Icon(Icons.menu_sharp),
-    //     ),
-    //   ),
-    // );
   }
 }

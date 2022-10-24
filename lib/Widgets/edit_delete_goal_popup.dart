@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
 import 'package:micro_calendar/Widgets/confirmation_window.dart';
 
@@ -6,15 +7,17 @@ import 'package:micro_calendar/Widgets/confirmation_window.dart';
 import '../Model/goal.dart';
 import '../Model/goal_progress.dart';
 import '../Actions/goal_actions.dart';
+import '../State/app_state.dart';
+import '../View/view_model.dart';
 import '../Widgets/number_wheel_selector.dart';
 
 import 'package:redux/redux.dart';
 
 class EditDeleteGoalPopup extends StatefulWidget {
   final Goal goal;
-  final Store store; 
+  final ViewModel viewModel;
 
-  const EditDeleteGoalPopup({required this.goal, required this.store,});
+  const EditDeleteGoalPopup({required this.goal, required this.viewModel});
 
   @override
   State<EditDeleteGoalPopup> createState() => _EditDeleteGoalPopupState();
@@ -50,24 +53,18 @@ class _EditDeleteGoalPopupState extends State<EditDeleteGoalPopup> {
     }); 
   }
 
-  void _deleteGoal(){
-    widget.store.dispatch(
-      DeleteGoalAction(widget.goal,)
-    );
+  void _deleteGoal(BuildContext context) {
+    widget.viewModel.deleteGoal(widget.goal);
     Navigator.of(context).pop();
   }
 
-  void _startConfirmationWindow(BuildContext ctx, Store store, Goal goal) {
+  void _deleteGoalConfirm()
+  {
     showDialog(
       context: context, 
       builder: (BuildContext context) {
         return ConfirmationWindow(onConfirmAction: _deleteGoal);}
     );
-  }
-
-  void _deleteGoalConfirm()
-  {
-    _startConfirmationWindow(context, widget.store, widget.goal);
   }
 
   void _changePeriod(PeriodUnit newPeriod)
@@ -88,10 +85,9 @@ class _EditDeleteGoalPopupState extends State<EditDeleteGoalPopup> {
       goalEndDate: _goalEndDate.toString(),
       goalPeriod: _periodController!,
       goalId: widget.goal.goalId,
+      progressPercentage: widget.goal.progressPercentage,
     );
-    widget.store.dispatch(
-      ModifyGoalAction(goal)
-    );
+    widget.viewModel.editGoal(goal);
     Navigator.of(context).pop();
   }
 
@@ -187,5 +183,6 @@ class _EditDeleteGoalPopupState extends State<EditDeleteGoalPopup> {
         )
       )
     );
+    
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:micro_calendar/Screens/activity_log_screen.dart';
 import 'package:micro_calendar/Screens/create_goal_screen.dart';
+import 'package:micro_calendar/Screens/sign_in_screen.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
@@ -7,6 +9,8 @@ import 'package:intl/intl.dart';
 import 'Model/goal.dart';
 
 import 'package:micro_calendar/Widgets/confirmation_window.dart';
+import 'SpawnPopups/spawn_popups.dart';
+import 'View/view_model.dart';
 import 'Widgets/goal_screen.dart';
 import 'Reducers/Reducer.dart';
 import 'State/app_state.dart';
@@ -16,75 +20,83 @@ import 'package:micro_calendar/Widgets/edit_delete_goal_popup.dart';
 
 
 void main() {
-  runApp(
-    MaterialApp(
-      title: 'Micro Calendar',
-      theme: AppThemes.defaultTheme,
-      home: const HomePage(),
-    )
-  );
+  runApp(MyApp());
 }
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
-
+class MyApp extends StatelessWidget {
+  // This widget is the root of your application.
   @override
-  State<HomePage> createState() => _HomePageState();
+  Widget build(BuildContext context) {
+    final Store<AppState> store =
+        new Store<AppState>(appStateReducer, initialState: AppState.test());
+    return StoreProvider<AppState>(
+        store: store,
+        child: MaterialApp(
+          title: 'Flutter Demo',
+          theme: AppThemes.defaultTheme,
+          home: HomePage(),
+        ));
+  }
 }
 
-class _HomePageState extends State<HomePage> {
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
-  void _startGoalTracker(BuildContext ctx, Store store, Goal goal) {
-    showDialog(context: context,
-      builder: (BuildContext context) {
-        return TrackGoalPopup(store: store, goal: goal);
-    });
-  }
 
-  void _startGoalEditor(BuildContext ctx, Store store, Goal goal) {
-    showDialog(context: context,
-      builder: (BuildContext context) {
-        return EditDeleteGoalPopup(store: store, goal: goal);
-    });
-  }
-
-  void _changeToGoalCreateScreen(BuildContext ctx, Store store)
+  void _changeToGoalCreateScreen(BuildContext ctx)
   {
     Navigator.of(ctx).push(MaterialPageRoute(builder: (_) {
-      return CreateGoalScreen(store: store);
+      return CreateGoalScreen();
     }));
   }
 
+  void _changeToGoalActivityLogScreen(BuildContext ctx, Goal goal)
+  {
+    Navigator.of(ctx).push(MaterialPageRoute(builder: (_) {
+      return ActivityLogScreen(goal: goal);
+    }));
+  }
 
+  void _changeToSignInScreen(BuildContext ctx)
+  {
+    Navigator.of(ctx).push(MaterialPageRoute(builder: (context) => SignInScreen()));
+  }
 
-  @override
-  Widget build(BuildContext context) {
-    AppBar appBar = AppBar(
+  AppBar _buildAppBar(ViewModel viewModel, BuildContext context)
+  {
+    return AppBar(
       leading: IconButton(icon: Icon(Icons.arrow_left), onPressed: () {}),
-      title: const Text('Calendar Name', style: TextStyle(fontFamily: 'OpenSans')),
+      title: const Text('Goals', style: TextStyle(fontFamily: 'OpenSans')),
       centerTitle: true, 
       actions: <Widget>[
         IconButton(icon: Icon(Icons.menu), onPressed: () {},),
-        IconButton(icon: Icon(Icons.arrow_right), onPressed: () {}),
+        viewModel.signedIn ? 
+        IconButton(icon: Icon(Icons.person), onPressed: () {}) :
+        TextButton(
+          child: Text("Sign In", ), 
+          onPressed: () {_changeToSignInScreen(context);}, 
+          style: ButtonStyle(foregroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 255, 255, 255)))),
       ],
     );
-    final store = Store(
-      appStateReducer,
-      initialState: const AppState.test(),
-    );
-    return Scaffold(
-      appBar: appBar,
-      body: StoreProvider(
-        store: store,
-        child: GoalScreen(
-          store: store, 
-          trackGoalFunction: _startGoalTracker, 
-          editGoalFunction: _startGoalEditor, 
-          maxHeight: MediaQuery.of(context).size.height - appBar.preferredSize.height,
-          maxWidth: MediaQuery.of(context).size.width,
-          changeToCreateGoalScreen: _changeToGoalCreateScreen,
-        ),
-      )
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    return StoreConnector<AppState, ViewModel>(
+      converter: (Store<AppState> store) => ViewModel.create(store),
+      builder: (BuildContext context, ViewModel viewModel) {
+        AppBar appBar = _buildAppBar(viewModel, context);
+        return Scaffold(
+          appBar: appBar,
+          body: GoalScreen(
+            maxHeight: MediaQuery.of(context).size.height - appBar.preferredSize.height,
+            maxWidth: MediaQuery.of(context).size.width,
+            changeToCreateGoalScreen: _changeToGoalCreateScreen,
+            changeToActivityLogScreen: _changeToGoalActivityLogScreen,
+          )
+        );
+      }
     );
   }
 }

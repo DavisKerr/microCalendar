@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:micro_calendar/Widgets/screen_tracker_indicators.dart';
 
-import '../Styles/app_themes.dart' as appStyle;
+import '../../Styles/app_themes.dart' as appStyle;
 
 class CreateGoalFormIntroduction extends StatelessWidget {
   final int totalPages;

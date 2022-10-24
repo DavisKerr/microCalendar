@@ -1,29 +1,29 @@
+import 'package:micro_calendar/View/view_model.dart';
 import 'package:micro_calendar/Widgets/goal_box.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
+import '../Actions/goal_actions.dart';
 import '../Model/goal.dart';
+import '../Model/goal_progress.dart';
 import '../State/app_state.dart';
 import '../Widgets/add_goal_button.dart';
 
 
 class GoalScreen extends StatelessWidget {
   
-  final Store store;
-  final Function trackGoalFunction;
-  final Function editGoalFunction;
   final Function changeToCreateGoalScreen;
+  final Function changeToActivityLogScreen;
   final double maxHeight;
   final double maxWidth;
 
   const GoalScreen({
-    required this.store, 
-    required this.trackGoalFunction, 
-    required this.editGoalFunction, 
     required this.maxHeight,
     required this.maxWidth,
-    required this.changeToCreateGoalScreen});
+    required this.changeToCreateGoalScreen,
+    required this.changeToActivityLogScreen
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,36 +32,34 @@ class GoalScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           const Text('Goals', textAlign: TextAlign.center, style: TextStyle(fontSize: 24),),
-          StoreConnector<AppState, Iterable<Goal>>(
-              converter: (store) => store.state.goalList,
-              builder: (context, items) {
-                return Container(
-                  height: maxHeight * 0.85,
-                  width: maxWidth * 0.9,
-                  child: ListView.builder(
-                    itemCount: items.length + 1,
-                    itemBuilder: (context, index) {
-                      if(index < items.length)
-                      {
-                        final item = items.elementAt(index);
-                        return Container(
-                          //height: (maxHeight * 0.85) * 0.20,
-                          child: GoalBox(
-                            goal: item, 
-                            onGoalBoxClick: trackGoalFunction, 
-                            onGoalBoxLongClick: editGoalFunction,
-                            store: store,
-                            maxWidth: maxWidth, 
-                            maxHeight: maxHeight),
-                        );
-                      }
-                      return AddGoalButton(changeToGoalScreen: changeToCreateGoalScreen, store: store);
-                    },
-                  ),
-                );
-              },
-            ),
-            
+          StoreConnector<AppState, ViewModel>(
+            converter: (Store<AppState> store) => ViewModel.create(store),
+            builder: (BuildContext context, ViewModel viewModel) {
+              return Container(
+                height: maxHeight * 0.85,
+                width: maxWidth * 0.9,
+                child: ListView.builder(
+                  itemCount: viewModel.goalList.length + 1,
+                  itemBuilder: (context, index) {
+                    if(index < viewModel.goalList.length)
+                    {
+                      final item = viewModel.goalList.elementAt(index);
+                      return Container(
+                        //height: (maxHeight * 0.85) * 0.20,
+                        child: GoalBox(
+                          goal: item, 
+                          maxWidth: maxWidth, 
+                          maxHeight: maxHeight,
+                          viewActivityLog: changeToActivityLogScreen,
+                        ),
+                      );
+                    }
+                    return AddGoalButton(changeToGoalScreen: changeToCreateGoalScreen);
+                  },
+                ),
+              );
+            },
+          ),
         ],
       ),
     );

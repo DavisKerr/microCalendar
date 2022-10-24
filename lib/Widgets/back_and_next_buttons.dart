@@ -5,7 +5,11 @@ import '../Styles/app_themes.dart' as appStyle;
 class BackAndNextButtons extends StatelessWidget {
   final Function onBackClicked;
   final Function onNextClicked;
-  const BackAndNextButtons({required this.onBackClicked, required this.onNextClicked});
+  final String backText;
+  final String nextText;
+
+  const BackAndNextButtons({required this.onBackClicked, required this.onNextClicked, this.backText = "Back", 
+  this.nextText = "Next"});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +24,7 @@ class BackAndNextButtons extends StatelessWidget {
             child: Row(
               children: [
                 Icon(Icons.keyboard_arrow_left_sharp, color: Color.fromARGB(255, 0, 0, 0)),
-                Text("Back", style: Theme.of(context).textTheme.titleMedium),
+                Text(backText, style: Theme.of(context).textTheme.titleMedium),
               ],
             ),
           ),
@@ -29,7 +33,7 @@ class BackAndNextButtons extends StatelessWidget {
             style: appStyle.AppThemes.largeFormButton,
             child: Row(
               children: [
-                Text("Next", style: Theme.of(context).textTheme.titleMedium),
+                Text(nextText, style: Theme.of(context).textTheme.titleMedium),
                 Icon(Icons.keyboard_arrow_right_sharp, color: Color.fromARGB(255, 0, 0, 0)),
               ],
             ),
