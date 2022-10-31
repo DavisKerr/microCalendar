@@ -8,18 +8,19 @@ import '../Model/goal.dart';
 import '../State/app_state.dart';
 import '../View/view_model.dart';
 
-class SignInScreen extends StatefulWidget {
-  const SignInScreen({super.key});
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
 
   @override
-  State<SignInScreen> createState() => _SignInScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
 
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
   AppBar _buildAppBar(ViewModel viewModel, BuildContext context) {
     return AppBar(
@@ -32,9 +33,12 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
+  void _signUp(ViewModel viewModel) {
+      //viewModel.signInAttempt(usernameController.text, passwordController.text);
+    }
+
   @override
   Widget build(BuildContext context) {
-
 
     return StoreConnector<AppState, ViewModel>(
         converter: (Store<AppState> store) => ViewModel.create(store),
@@ -47,7 +51,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
-                    const Text('Sign In', textAlign: TextAlign.center, style: TextStyle(fontSize: 24),),
+                    const Text('Sign Up', textAlign: TextAlign.center, style: TextStyle(fontSize: 24),),
                     const SizedBox(height: 50),
                     TextField(
                     decoration: InputDecoration(labelText: "Username", hintText: "Username"),
@@ -60,9 +64,13 @@ class _SignInScreenState extends State<SignInScreen> {
                     obscureText: true,
                     ),
                     SizedBox(height: 50),
-                    ElevatedButton(onPressed: () {viewModel.signInAttempt(usernameController.text, passwordController.text);}, child: Text("Sign In")),
-                    SizedBox(height: 25),
-                    TextButton(child: Text("No Account? Sign Up!"), onPressed: () {viewModel.navigateToSignUpScreen();},)
+                    TextField(
+                    decoration: InputDecoration(labelText: "Confirm Password", hintText: "Confirm Password"),
+                    controller: passwordController,
+                    obscureText: true,
+                    ),
+                    SizedBox(height: 50),
+                    ElevatedButton(onPressed: () {_signUp(viewModel);}, child: Text("Sign Up")),
                   ],
                 ),
               ),

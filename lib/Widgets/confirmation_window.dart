@@ -21,7 +21,7 @@ class _ConfirmationWindowState extends State<ConfirmationWindow> {
 
   void _submitForm()
   {
-    widget.onConfirmAction(context);
+    widget.onConfirmAction();
     Navigator.of(context).pop();
   }
 

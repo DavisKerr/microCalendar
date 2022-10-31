@@ -1,6 +1,7 @@
 
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:micro_calendar/Database/db_helper.dart';
 import 'package:time_machine/time_machine.dart';
 
 import '../lib/Model/goal.dart';
@@ -9,6 +10,12 @@ import '../lib/Reducers/Reducer.dart';
 
 void main() 
 {
+  group('DB', () {
+    test('DB', () {
+      DBHelper.database().then((db) => db.rawQuery("SELECT * FROM goal_table").then((res) => print(res)));
+      expect(0, equals(0));
+    });
+  });
   group('Integer', () {
     test('getNumCompletePeriods gets the correct number for a week of daily goals', () {
       DateTime start = DateTime.parse("2022-10-22 00:00:00");

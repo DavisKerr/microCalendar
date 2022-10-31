@@ -13,7 +13,6 @@ class LargeGoalMenuButton extends StatelessWidget {
   final double height;
   final double width;
   final Goal goal;
-  final Function trackGoal;
   final Function viewActivityLog;
   final ViewModel viewModel;
 
@@ -21,49 +20,28 @@ class LargeGoalMenuButton extends StatelessWidget {
     required this.height, 
     required this.width, 
     required this.goal,
-    required this.trackGoal,
     required this.viewActivityLog,
     required this.viewModel
   });
 
   _openTrackerMenu(BuildContext context)
   {
-    Navigator.of(context).pop();
-    startGoalTracker(context, goal, trackGoal, DateTime.now(), (){});
-    showDialog(context: context,
-      builder: (BuildContext context) {
-        return Container();
-    });
+    startGoalTracker(context, goal, DateTime.now(),);
   }
 
   _openEditorMenu(BuildContext context)
   {
-    Navigator.of(context).pop();
     startGoalEditor(context, goal, viewModel);
-    showDialog(context: context,
-      builder: (BuildContext context) {
-        return Container();
-    });
   }
 
   _openActivityLog(BuildContext context)
   {
-    Navigator.of(context).pop();
-    viewActivityLog(context, goal);
-    showDialog(context: context,
-      builder: (BuildContext context) {
-        return Container();
-    });
+    viewModel.navigateToActivityLogScreen(goal);
   }
 
   _openDeleteGoalConfirmationWindow(BuildContext context)
   {
-    Navigator.of(context).pop();
     startConfirmationWindow(context, goal, _deleteGoal);
-    showDialog(context: context,
-      builder: (BuildContext context) {
-        return Container();
-    });
   }
 
   void _deleteGoal(BuildContext context) {
@@ -80,40 +58,56 @@ class LargeGoalMenuButton extends StatelessWidget {
         height: height,
         width: width,
         child: PopupMenuButton(
+          
           color: Color.fromARGB(255, 255, 255, 255),
           iconSize: 30,
-          icon: Icon(Icons.more_vert),
+          icon: const Icon(Icons.more_vert),
           itemBuilder: (BuildContext context) => <PopupMenuEntry>[
-            PopupMenuItem(
-              onTap: () {_openTrackerMenu(context);},
-              child: const ListTile(
+            const PopupMenuItem(
+              value: 0,
+              child: ListTile(
                 leading: Icon(Icons.check_box),
                 title: Text('Track Goal'),
               ),
             ),
-            PopupMenuItem(
-              onTap: () {_openEditorMenu(context);},
-              child: const ListTile(
+            const PopupMenuItem(
+              value: 1,
+              child: ListTile(
                 leading: Icon(Icons.edit),
                 title: Text('Edit Goal'),
               ),
             ),
             const PopupMenuDivider(),
-            PopupMenuItem(
-              onTap: () {_openActivityLog(context);},
-              child: const ListTile(
+            const PopupMenuItem(
+              value: 2,
+              child: ListTile(
                 leading: Icon(Icons.view_agenda),
                 title: Text('Activity Log'),
               ),
             ),
-            PopupMenuItem(
-              onTap: () {_openDeleteGoalConfirmationWindow(context);},
-              child: const ListTile(
+            const PopupMenuItem(
+              value: 3,
+              child: ListTile(
                 leading: Icon(Icons.delete),
                 title: Text('Delete Goal'),
               ),
             ),
           ],
+
+          onSelected: (value) {
+            if(value == 0) {
+              _openTrackerMenu(context);
+            }
+            else if(value == 1) {
+              _openEditorMenu(context);
+            }
+            else if(value == 2) {
+              _openActivityLog(context);
+            }
+            else {
+              _openDeleteGoalConfirmationWindow(context);
+            }
+          },
         ),
       ),
     );

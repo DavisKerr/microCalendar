@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:micro_calendar/Actions/db_actions.dart';
+import 'package:micro_calendar/Middleware/screen_navigation_middleware.dart';
 import 'package:micro_calendar/Screens/activity_log_screen.dart';
 import 'package:micro_calendar/Screens/create_goal_screen.dart';
-import 'package:micro_calendar/Screens/sign_in_screen.dart';
+import 'package:micro_calendar/Utils/navigator_key.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:intl/intl.dart';
 
+import 'Middleware/account_middleware.dart';
+import 'Middleware/db_middleware.dart';
 import 'Model/goal.dart';
 
-import 'package:micro_calendar/Widgets/confirmation_window.dart';
-import 'SpawnPopups/spawn_popups.dart';
+import 'Screens/splash_screen.dart';
+import 'Utils/init.dart';
 import 'View/view_model.dart';
 import 'Widgets/goal_screen.dart';
 import 'Reducers/Reducer.dart';
 import 'State/app_state.dart';
 import 'Styles/app_themes.dart';
-import 'package:micro_calendar/Widgets/track_goal_popup.dart';
-import 'package:micro_calendar/Widgets/edit_delete_goal_popup.dart';
 
 
 void main() {
@@ -24,20 +25,39 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+  bool _launching = true;
   @override
   Widget build(BuildContext context) {
     final Store<AppState> store =
-        new Store<AppState>(appStateReducer, initialState: AppState.test());
+        Store<AppState>(
+          appStateReducer, 
+          initialState: AppState.empty(),
+          middleware: [accountMiddleware, navigationMiddleware, dbMiddleware],
+        );
     return StoreProvider<AppState>(
-        store: store,
-        child: MaterialApp(
-          title: 'Flutter Demo',
-          theme: AppThemes.defaultTheme,
-          home: HomePage(),
-        ));
+      store: store,
+      child: MaterialApp(
+        navigatorKey: navigatorKey,
+        title: 'Flutter Demo',
+        theme: AppThemes.defaultTheme,
+        home: StoreConnector<AppState, ViewModel>(
+          converter: (Store<AppState> store) => ViewModel.create(store),
+          onDidChange: ((previousViewModel, viewModel) => print(viewModel.goalList.length)),
+          builder: (BuildContext context, ViewModel viewModel) {
+            if(_launching)
+            {
+              viewModel.loadData();
+              _launching = false;
+            }
+            return viewModel.initLoading ? SplashScreen() : HomePage();
+          }
+        )
+      )
+    );
   }
 }
+
+
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -57,15 +77,9 @@ class HomePage extends StatelessWidget {
     }));
   }
 
-  void _changeToSignInScreen(BuildContext ctx)
-  {
-    Navigator.of(ctx).push(MaterialPageRoute(builder: (context) => SignInScreen()));
-  }
-
   AppBar _buildAppBar(ViewModel viewModel, BuildContext context)
   {
     return AppBar(
-      leading: IconButton(icon: Icon(Icons.arrow_left), onPressed: () {}),
       title: const Text('Goals', style: TextStyle(fontFamily: 'OpenSans')),
       centerTitle: true, 
       actions: <Widget>[
@@ -74,7 +88,7 @@ class HomePage extends StatelessWidget {
         IconButton(icon: Icon(Icons.person), onPressed: () {}) :
         TextButton(
           child: Text("Sign In", ), 
-          onPressed: () {_changeToSignInScreen(context);}, 
+          onPressed: () {viewModel.navigateToLoginScreen();}, 
           style: ButtonStyle(foregroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 255, 255, 255)))),
       ],
     );

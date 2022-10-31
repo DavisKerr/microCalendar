@@ -20,24 +20,31 @@ class ActivityLogScreen extends StatelessWidget {
     Navigator.of(context).pop();
   }
 
-  @override
-  Widget build(BuildContext context) {
-
-    AppBar appBar = AppBar(
-      leading: IconButton(icon: Icon(Icons.arrow_left), onPressed: () => _backToGoalScreen(context)),
+  AppBar _buildAppBar(ViewModel viewModel, BuildContext context) {
+    return AppBar(
+      leading: IconButton(icon: Icon(Icons.arrow_left), onPressed: () => viewModel.navigateBack()),
       title: const Text('Calendar Name', style: TextStyle(fontFamily: 'OpenSans')),
       centerTitle: true, 
       actions: <Widget>[
         IconButton(icon: Icon(Icons.menu), onPressed: () {},),
-        IconButton(icon: Icon(Icons.arrow_right), onPressed: () {}),
+        viewModel.signedIn ? 
+        IconButton(icon: Icon(Icons.person), onPressed: () {}) :
+        TextButton(
+          child: Text("Sign In", ), 
+          onPressed: () {viewModel.navigateToLoginScreen();}, 
+          style: ButtonStyle(foregroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 255, 255, 255)))),
       ],
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
 
     return StoreConnector<AppState, ViewModel>(
         converter: (Store<AppState> store) => ViewModel.create(store),
         builder: (BuildContext context, ViewModel viewModel) {
           return Scaffold(
-            appBar: appBar,
+            appBar: _buildAppBar(viewModel, context),
             body: Container(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,

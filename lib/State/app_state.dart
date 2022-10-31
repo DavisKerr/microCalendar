@@ -12,16 +12,18 @@ class AppState {
   final int nextGoalId;
   final bool signedIn;
   final String username;
+  final bool initLoading;
 
   const AppState({
     required this.goalList,
     this.nextGoalId = 0,
     this.signedIn = false,
-    this.username = ""
+    this.username = "",
+    this.initLoading = false,
   });
 
   const AppState.empty() 
-    : goalList =  const <Goal>[], nextGoalId = 0, signedIn = false, username = '';
+    : goalList =  const <Goal>[], nextGoalId = 0, signedIn = false, username = '', initLoading = false;
 
   const AppState.test()
     : goalList = const <Goal>[
@@ -50,6 +52,7 @@ class AppState {
     ], 
     nextGoalId = 2,
     signedIn = false,
-    username = "";
+    username = "",
+    initLoading = false;
     
 }

@@ -1,6 +1,8 @@
+import 'package:micro_calendar/Actions/account_actions.dart';
+import 'package:micro_calendar/Actions/db_actions.dart';
+import 'package:micro_calendar/Actions/navigation_actions.dart';
 import 'package:micro_calendar/Model/goal.dart';
 import 'package:redux/redux.dart';
-import '../Actions/action.dart';
 import '../Actions/goal_actions.dart';
 import '../Model/goal_progress.dart';
 import '../State/app_state.dart';
@@ -11,25 +13,41 @@ class ViewModel{
   int nextGoalId;
   bool signedIn;
   String username;
+  bool initLoading;
 
   final Function (Goal newGoal) editGoal;
   final Function (Goal toDelete) deleteGoal;
   final Function (Goal newGoal) createGoal;
-  final Function (Goal goal, GoalProgress newProgress) editProgress;
-  final Function (Goal goal, GoalProgress toDelete) deleteProgress;
+  final Function (GoalProgress newProgress) updateProgress;
+  final Function (int progressId, int goalId) deleteProgress;
   final Function (Goal goal, GoalProgress newProgress) createProgress;
+  final Function (String username, String password) signInAttempt;
+  final Function () navigateToLoginScreen;
+  final Function () navigateBack;
+  final Function () navigateToGoalCreationScreen;
+  final Function (Goal goal) navigateToActivityLogScreen;
+  final Function () navigateToSignUpScreen;
+  final Function () loadData;
 
   ViewModel(
     this.goalList,
     this.nextGoalId, 
     this.signedIn,
     this.username,
+    this.initLoading,
     this.editGoal,
     this.deleteGoal,
     this.createGoal,
-    this.editProgress,
+    this.updateProgress,
     this.deleteProgress,
     this.createProgress,
+    this.signInAttempt,
+    this.navigateToLoginScreen,
+    this.navigateBack,
+    this.navigateToGoalCreationScreen,
+    this.navigateToActivityLogScreen,
+    this.navigateToSignUpScreen,
+    this.loadData,
   );
  
   factory ViewModel.create(Store<AppState> store){
@@ -49,21 +67,64 @@ class ViewModel{
       store.dispatch(AddGoalAction(newGoal));
     }
 
-    _editProgress(Goal goal, GoalProgress newProgress) {
+    _updateProgress(GoalProgress newProgress) {
       store.dispatch(
-        UpdateGoalProgressAction(goal, newProgress)
+        UpdateGoalProgressAttemptAction(newProgress)
       );
     }
 
-    _deleteProgress(Goal goal, GoalProgress toDelete) {
+    _deleteProgress(int progressId, int goalId) {
       store.dispatch(
-        DeleteGoalProgressAction(goal, toDelete)
+        DeleteGoalProgressAttemptAction(goalId, progressId)
       );
     }
 
     _createProgress(Goal goal, GoalProgress newProgress) {
       store.dispatch(
-      AddGoalProgressAction(goal, newProgress)
+        InsertGoalProgressAttemptAction(goal, newProgress)
+      //AddGoalProgressAction(goal, newProgress)
+      );
+    }
+
+    _signInAttempt(String username, String password) {
+      store.dispatch(
+      SignInAttemptAccountAction(username, password)
+      );
+    }
+
+    _navigateToLogInScreen() {
+      store.dispatch(
+        NavigateToLogInScreenAction()
+      );
+    }
+
+    _navigateBack() {
+      store.dispatch(
+        NavigateBackAction()
+      );
+    }
+
+    _navigateToGoalCreationScreen() {
+      store.dispatch(
+        NavigateToGoalCreationScreenAction()
+      );
+    }
+
+    _navigateToActivityLogScreen(Goal goal) {
+      store.dispatch(
+        NavigateToActivityLogScreenAction(goal)
+      );
+    }
+
+    _navigateToSIgnUpScreen() {
+      store.dispatch(
+        NavigateToSignUpScreenAction()
+      );
+    }
+
+    _loadData() {
+      store.dispatch(
+        LoadDataAttemptAction()
       );
     }
   
@@ -72,12 +133,20 @@ class ViewModel{
       store.state.nextGoalId,
       store.state.signedIn,
       store.state.username,
+      store.state.initLoading,
       _editGoal, 
       _deleteGoal,
       _createGoal,
-      _editProgress,
+      _updateProgress,
       _deleteProgress,
       _createProgress,
+      _signInAttempt,
+      _navigateToLogInScreen,
+      _navigateBack,
+      _navigateToGoalCreationScreen,
+      _navigateToActivityLogScreen,
+      _navigateToSIgnUpScreen,
+      _loadData,
     );
   }
 }

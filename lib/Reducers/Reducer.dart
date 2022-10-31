@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart' as Flutter;
 import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:micro_calendar/Actions/account_actions.dart';
+import 'package:micro_calendar/Actions/db_actions.dart';
 import 'package:time_machine/time_machine.dart';
 
 import '../State/app_state.dart';
@@ -10,6 +12,10 @@ import '../Model/goal.dart';
 import '../Model/goal_progress.dart';
 import '../Actions/action.dart';
 import '../Actions/goal_actions.dart';
+
+/*
+* Event data structure to minimize new operations. 
+*/
 
 extension AddRemoveItemSorted<T> on Iterable<T> {
   Iterable<T> operator +(T other) {
@@ -155,6 +161,7 @@ Iterable<Goal> editGoal(
         goalPeriod: action.goal.goalPeriod,
         goalStartDate: e.goalStartDate,
         goalEndDate: action.goal.goalEndDate,
+        goalProgress: e.goalProgress,
         goalId: e.goalId,
         progressPercentage: e.progressPercentage,
       );
@@ -167,14 +174,14 @@ Iterable<Goal> editGoal(
 
 Iterable<Goal> addProgress(
   Iterable<Goal> goalList,
-  AddGoalProgressAction action
+  InsertGoalProgressSuccessAction action
 ) {
   
   return goalList.map((goal) {
-    if(goal.goalId == action.goal.goalId)
+    if(goal.goalId == action.goalId)
     {
       Iterable<GoalProgress> newProgress = quicksort(goal.goalProgress + 
-        GoalProgress(progress: action.progress.progress, dateString: action.progress.dateString, id: goal.nextProgressId)
+        GoalProgress(progress: action.progress.progress, dateString: action.progress.dateString, id: action.progressId, goalId: goal.goalId)
       );
       return Goal(
         goalName: goal.goalName,
@@ -183,7 +190,7 @@ Iterable<Goal> addProgress(
         goalUnits: goal.goalUnits,
         goalPeriod: goal.goalPeriod,
         goalStartDate: goal.goalStartDate,
-        goalEndDate: action.goal.goalEndDate,
+        goalEndDate: goal.goalEndDate,
         goalId: goal.goalId,
         goalProgress: newProgress,
         progressPercentage: calculateNewProgress(newProgress, goal),
@@ -198,13 +205,13 @@ Iterable<Goal> addProgress(
 
 Iterable<Goal> deleteProgress(
   Iterable<Goal> goalList,
-  DeleteGoalProgressAction action
+  DeleteGoalProgressSuccessAction action
 ) {
   
   return goalList.map((goal) {
-    if(goal.goalId == action.goal.goalId)
+    if(goal.goalId == action.goalId)
     {
-      Iterable<GoalProgress> newProgress = quicksort(goal.goalProgress.where((i) => i.id != action.progress.id));
+      Iterable<GoalProgress> newProgress = quicksort(goal.goalProgress.where((i) => i.id != action.progressId));
       return Goal(
         goalName: goal.goalName,
         goalVerb: goal.goalVerb,
@@ -212,7 +219,7 @@ Iterable<Goal> deleteProgress(
         goalUnits: goal.goalUnits,
         goalPeriod: goal.goalPeriod,
         goalStartDate: goal.goalStartDate,
-        goalEndDate: action.goal.goalEndDate,
+        goalEndDate: goal.goalEndDate,
         goalId: goal.goalId,
         goalProgress: newProgress,
         progressPercentage: calculateNewProgress(newProgress, goal),
@@ -227,14 +234,14 @@ Iterable<Goal> deleteProgress(
 
 Iterable<Goal> updateProgress(
   Iterable<Goal> goalList,
-  UpdateGoalProgressAction action
+  UpdateGoalProgressSuccessAction action
 ) {
   
   return goalList.map((goal) {
-    if(goal.goalId == action.goal.goalId)
+    if(goal.goalId == action.newProgress.goalId)
     {
       Iterable<GoalProgress> newProgress = quicksort((goal.goalProgress.map((i) {
-        return i.id == action.progress.id ? action.progress : i;
+        return i.id == action.newProgress.id ? action.newProgress : i;
 
       })));
       return Goal(
@@ -244,7 +251,7 @@ Iterable<Goal> updateProgress(
         goalUnits: goal.goalUnits,
         goalPeriod: goal.goalPeriod,
         goalStartDate: goal.goalStartDate,
-        goalEndDate: action.goal.goalEndDate,
+        goalEndDate: goal.goalEndDate,
         goalId: goal.goalId,
         goalProgress: newProgress,
         progressPercentage: calculateNewProgress(newProgress, goal),
@@ -257,13 +264,37 @@ Iterable<Goal> updateProgress(
   });
 }
 
+Iterable<Goal> loadData(LoadDataSuccessAction action)
+{
+  //print(action.progress);
+  return action.goals.map((goal) {
+    Iterable<GoalProgress> progress = action.progress.where((e) => e.goalId == goal.goalId);
+    return Goal(
+        goalName: goal.goalName,
+        goalVerb: goal.goalVerb,
+        goalQuantity: goal.goalQuantity,
+        goalUnits: goal.goalUnits,
+        goalPeriod: goal.goalPeriod,
+        goalStartDate: goal.goalStartDate,
+        goalEndDate: goal.goalEndDate,
+        goalId: goal.goalId,
+        goalProgress: progress, //action.progress.where((element) => element.goalId == goal.goalId),
+        progressPercentage: calculateNewProgress(progress, goal),
+        nextProgressId: 7,
+      );
+  });
+}
 
 Iterable<Goal> modifyGoalListReducer(
   AppState oldAppState,
   Action action,
 ) {
-  
-  if(action is DeleteGoalAction) {
+  if(action is LoadDataSuccessAction)
+  {
+    return loadData(action);
+    //return oldAppState.goalList;
+  }
+  else if(action is DeleteGoalAction) {
     return deleteGoal(oldAppState.goalList, action);
   }
   else if(action is ModifyGoalAction) {
@@ -272,13 +303,13 @@ Iterable<Goal> modifyGoalListReducer(
   else if(action is AddGoalAction) {
      return addGoal(oldAppState, action);
   }
-  else if(action is AddGoalProgressAction) {
+  else if(action is InsertGoalProgressSuccessAction) {
     return addProgress(oldAppState.goalList, action);
   }
-  else if(action is DeleteGoalProgressAction) {
+  else if(action is DeleteGoalProgressSuccessAction) {
     return deleteProgress(oldAppState.goalList, action);
   }
-  else if(action is UpdateGoalProgressAction) {
+  else if(action is UpdateGoalProgressSuccessAction) {
     return updateProgress(oldAppState.goalList, action);
   }
   else {
@@ -301,11 +332,51 @@ int modifyGoalIdCounterReducer(
   }
 }
 
+bool modifySignInReducer(bool oldAppState, Action action)
+{
+  if(action is SignInSuccessAccountAction)
+  {
+     return true;
+  }
+  else {
+    return oldAppState;
+  }
+}
+
+bool modifyinitLoadingReducer(bool oldAppState, Action action)
+{
+  if(action is LoadDataAttemptAction)
+  {
+    return true;
+  }
+  else if(action is LoadDataSuccessAction)
+  {
+    return false;
+  }
+  else
+  {
+    return oldAppState;
+  }
+}
+
+String modifyUsernameReducer(String username, Action action) 
+{
+  if(action is SignInSuccessAccountAction) {
+    return action.username;
+  }
+  else {
+    return username;
+  }
+}
+
 AppState appStateReducer(
   AppState oldAppState,
   action
 ) => AppState(
   goalList: modifyGoalListReducer(oldAppState, action),
   nextGoalId: modifyGoalIdCounterReducer(oldAppState, action),
+  signedIn: modifySignInReducer(oldAppState.signedIn, action),
+  username: modifyUsernameReducer(oldAppState.username, action),
+  initLoading: modifyinitLoadingReducer(oldAppState.initLoading, action)
 );
 

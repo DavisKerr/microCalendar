@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
+import 'package:micro_calendar/Middleware/db_middleware.dart';
 
 import '../Model/goal.dart';
 import '../Model/goal_progress.dart';
@@ -10,22 +11,21 @@ import 'package:redux/redux.dart';
 
 import '../State/app_state.dart';
 import '../View/view_model.dart';
+import 'confirmation_window.dart';
 
 class TrackGoalPopup extends StatefulWidget {
   final Goal goal;
-  final Function submitForm;
-  final Function deleteAction;
   final bool includeDelete;
   final DateTime startDate;
   final double startUnits;
+  final int progressId;
 
   const TrackGoalPopup({
     required this.goal, 
-    required this.submitForm, 
     required this.startDate, 
     required this.startUnits, 
-    required this.deleteAction,
     required this.includeDelete,
+    this.progressId = -1,
   });
 
   @override
@@ -36,6 +36,43 @@ class _TrackGoalPopupState extends State<TrackGoalPopup> {
   final TextEditingController amountController = TextEditingController();
 
   DateTime? _selectedDate;
+
+  void _submitProgressForm(BuildContext context, ViewModel viewModel)
+  {
+    GoalProgress newProgress = GoalProgress(
+      progress: double.parse(amountController.text), 
+      dateString: _selectedDate == null ?  "${DateUtils.dateOnly(DateTime.now())}" : "${DateUtils.dateOnly(_selectedDate!)}",
+      id: widget.progressId, 
+      goalId: widget.goal.goalId
+    );
+    if(widget.progressId == -1) {
+      viewModel.createProgress(widget.goal, newProgress);
+    }
+    else {
+      viewModel.updateProgress(newProgress);
+    }
+    
+    Navigator.of(context).pop();
+  }
+
+  void _deleteProgressConfirm(BuildContext context, ViewModel viewModel)
+  {
+    showDialog(
+      context: context, 
+      builder: (BuildContext context) {
+        return ConfirmationWindow(
+          onConfirmAction: () {_deleteProgress(context, viewModel);}
+        );
+      }
+    );
+  }
+
+
+  void _deleteProgress(BuildContext context, ViewModel viewModel)
+  {
+    viewModel.deleteProgress(widget.progressId, widget.goal.goalId);
+    Navigator.of(context).pop();
+  }
 
   void _presentDatePicker() {
    showDatePicker(
@@ -112,12 +149,7 @@ class _TrackGoalPopupState extends State<TrackGoalPopup> {
                     ElevatedButton(onPressed: () {Navigator.of(context).pop();}, child: Text('Cancel')),
                     SizedBox(width: 20),
                     ElevatedButton(onPressed: () {
-                      widget.submitForm(double.parse(amountController.text) as double, 
-                        _selectedDate == null ?  "${DateUtils.dateOnly(DateTime.now())}" : "${DateUtils.dateOnly(_selectedDate!)}",
-                        widget.goal,
-                        context,
-                        viewModel
-                      );
+                      _submitProgressForm(context,viewModel);
                     }, 
                       child: Text('Submit')
                     ),
@@ -126,7 +158,7 @@ class _TrackGoalPopupState extends State<TrackGoalPopup> {
                 widget.includeDelete ? SizedBox(
                   width: 220,
                   child: ElevatedButton(
-                    onPressed: () {widget.deleteAction(viewModel, context);}, 
+                    onPressed: () {_deleteProgressConfirm(context, viewModel);}, 
                     child: Text("Delete Event"),
                     style: ElevatedButton.styleFrom(primary: Colors.red),
                   ),

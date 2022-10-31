@@ -21,27 +21,27 @@ class ProgressBox extends StatelessWidget {
   final ViewModel viewModel;
   const ProgressBox({required this.progress, required this.units, required this.goal, required this.viewModel});
 
-  void _submitProgressForm(double units, String date, Goal goal, BuildContext context, ViewModel viewModel)
-  {
-    GoalProgress newProgress = GoalProgress(progress: units, dateString: date, id: progress.id);
-    viewModel.editProgress(goal, newProgress);
-    Navigator.of(context).pop();
-  }
+  // void _submitProgressForm(double units, String date, Goal goal, BuildContext context, ViewModel viewModel)
+  // {
+  //   GoalProgress newProgress = GoalProgress(progress: units, dateString: date, id: progress.id, goalId: goal.goalId);
+  //   viewModel.editProgress(goal, newProgress);
+  //   Navigator.of(context).pop();
+  // }
 
-  void _deleteProgressConfirm(BuildContext context)
-  {
-    showDialog(
-      context: context, 
-      builder: (BuildContext context) {
-        return ConfirmationWindow(onConfirmAction: _deleteProgress);}
-    );
-  }
+  // void _deleteProgressConfirm(BuildContext context)
+  // {
+  //   showDialog(
+  //     context: context, 
+  //     builder: (BuildContext context) {
+  //       return ConfirmationWindow(onConfirmAction: _deleteProgress);}
+  //   );
+  // }
 
-  void _deleteProgress(BuildContext context)
-  {
-    viewModel.deleteProgress(goal, progress);
-    Navigator.of(context).pop();
-  }
+  // void _deleteProgress(BuildContext context)
+  // {
+  //   viewModel.deleteProgress(progress);
+  //   Navigator.of(context).pop();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +53,7 @@ class ProgressBox extends StatelessWidget {
             height: 75,
             padding: EdgeInsets.all(5),
             child: GestureDetector(
-              onTap: () {startGoalTracker(context, goal, _submitProgressForm, DateTime.parse(progress.dateString),_deleteProgressConfirm, progress.progress, true);},
+              onTap: () {startGoalTracker(context, goal,  DateTime.parse(progress.dateString), progress.progress, true, progress.id);},
               child: Card(
                 margin: EdgeInsets.only(left: 10, bottom:10, top:10, right: 10),
                 child: Column(

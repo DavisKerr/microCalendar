@@ -41,6 +41,8 @@ dependencies:
   carousel_slider: ^4.1.1
   time_machine: ^0.9.17
   jiffy: ^5.0.0
+  sqflite: ^2.2.0+2
+  path: ^1.8.2
 
 dev_dependencies:
   flutter_test:

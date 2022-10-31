@@ -60,12 +60,12 @@ class GoalBox extends StatelessWidget {
     return (goal.goalQuantity * factor);
   }
 
-  void _submitProgressForm(double units, String date, Goal goal, BuildContext context, ViewModel viewModel)
-  {
-    GoalProgress newProgress = GoalProgress(progress: units, dateString: date, id: -1);
-    viewModel.createProgress(goal, newProgress);
-    Navigator.of(context).pop();
-  }
+  // void _submitProgressForm(double units, String date, Goal goal, BuildContext context, ViewModel viewModel)
+  // {
+  //   GoalProgress newProgress = GoalProgress(progress: units, dateString: date, id: -1, goalId: goal.goalId);
+  //   viewModel.createProgress(goal, newProgress);
+  //   Navigator.of(context).pop();
+  // }
 
   // double calculateProgress(Goal goal, ViewModel viewModel)
   // {
@@ -90,7 +90,7 @@ class GoalBox extends StatelessWidget {
                     height: 150,
                     width: maxWidth * 0.75,
                     child: GestureDetector(
-                      onTap: () {startGoalTracker(context, goal, _submitProgressForm, DateTime.now(), (){},);},
+                      onTap: () {startGoalTracker(context, goal, DateTime.now(),);},
                       onLongPress: () {startGoalEditor(context, goal, viewModel);},
                       child: Card(
                         elevation: 0,
@@ -115,7 +115,6 @@ class GoalBox extends StatelessWidget {
                       height: maxHeight, 
                       width: maxWidth * 0.25,
                       goal: goal,
-                      trackGoal: _submitProgressForm,
                       viewActivityLog: viewActivityLog,
                       viewModel: viewModel,
                     )

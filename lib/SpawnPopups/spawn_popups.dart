@@ -17,17 +17,17 @@ void startConfirmationWindow(BuildContext ctx, Goal goal, Function action) {
     );
   }
 
-  void startGoalTracker(BuildContext ctx, Goal goal, Function action, 
-  DateTime startDate, Function deleteFunction, [double startUnits = 0, bool canDelete = false]) {
+  void startGoalTracker(BuildContext ctx, Goal goal, 
+  DateTime startDate, [double startUnits = 0, bool canDelete = false, int progressId = -1]) {
     showDialog(context: ctx,
       builder: (BuildContext context) {
         return TrackGoalPopup(
-          submitForm: action, 
           goal: goal, 
           startDate: startDate, 
-          deleteAction: deleteFunction,
           includeDelete: canDelete,
-          startUnits: startUnits);
+          startUnits: startUnits,
+          progressId: progressId,
+        );
     });
   }
 

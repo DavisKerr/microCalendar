@@ -45,12 +45,6 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
   String endDate = "00/00/00";
   ViewModel? viewModel = null;
 
-  void _backToGoalScreen()
-  {
-    // TODO: Add a confirmation window here. 
-    Navigator.of(context).pop();
-  }
-
   void _updateStartDate(DateTime date)
   {
     setState(() {
@@ -109,32 +103,40 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
     }
     
     
-    _backToGoalScreen();
+    viewModel!.navigateBack();
+  }
+
+  AppBar _buildAppBar(ViewModel viewModel, BuildContext context) {
+    return AppBar(
+      leading: IconButton(icon: Icon(Icons.arrow_left), onPressed: () => viewModel.navigateBack()),
+      title: const Text('Calendar Name', style: TextStyle(fontFamily: 'OpenSans')),
+      centerTitle: true, 
+      actions: <Widget>[
+        IconButton(icon: Icon(Icons.menu), onPressed: () {},),
+        viewModel.signedIn ? 
+        IconButton(icon: Icon(Icons.person), onPressed: () {}) :
+        TextButton(
+          child: Text("Sign In", ), 
+          onPressed: () {viewModel.navigateToLoginScreen();}, 
+          style: ButtonStyle(foregroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 255, 255, 255)))),
+      ],
+    );
   }
 
   @override
   Widget build(BuildContext context) {
 
-    AppBar appBar = AppBar(
-      leading: IconButton(icon: Icon(Icons.arrow_left), onPressed: _backToGoalScreen),
-      title: const Text('Calendar Name', style: TextStyle(fontFamily: 'OpenSans')),
-      centerTitle: true, 
-      actions: <Widget>[
-        IconButton(icon: Icon(Icons.menu), onPressed: () {},),
-        IconButton(icon: Icon(Icons.arrow_right), onPressed: () {}),
-      ],
-    );
 
     startDate = startDate != '00/00/00' ? startDate : '${DateUtils.dateOnly(DateTime.now())}';
     endDate = endDate != '00/00/00' ? endDate : '${DateUtils.dateOnly(DateTime.now().add(Duration(days: 90)))}';
 
-    return Scaffold(
-      appBar: appBar,
-      body: StoreConnector<AppState, ViewModel>(
-        converter: (Store<AppState> store) => ViewModel.create(store),
-        builder: (BuildContext context, ViewModel viewModel) {
-          this.viewModel = viewModel;
-          return PageView(
+    return StoreConnector<AppState, ViewModel>(
+      converter: (Store<AppState> store) => ViewModel.create(store),
+      builder: (BuildContext context, ViewModel viewModel) {
+        this.viewModel = viewModel;
+        return Scaffold(
+          appBar: _buildAppBar(viewModel, context),
+          body: PageView(
             controller: pageController,
             physics: NeverScrollableScrollPhysics(),
             children: <Widget>[
@@ -231,9 +233,9 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
                 endDate: endDate,
               ),
             ],
-          );
-        }
-      )
+          ),
+        );
+      }
     );
   }
 }
