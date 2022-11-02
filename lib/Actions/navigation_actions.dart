@@ -33,3 +33,8 @@ class NavigateToActivityLogScreenAction extends NavigationAction {
 class NavigateToSignUpScreenAction extends NavigationAction {
   const NavigateToSignUpScreenAction();
 }
+
+@immutable
+class NavigateToCompletedGoalScreenAction extends NavigationAction {
+  const NavigateToCompletedGoalScreenAction();
+}

@@ -40,25 +40,29 @@ class GoalBox extends StatelessWidget {
     return (end.difference(now).inHours / 24).round();
   }
 
-  double calculateTotal(Goal goal)
-  {
-    double factor = 0;
-    if(goal.goalPeriod == PeriodUnit.day)
-    {
-      factor = LocalDate.dateTime(DateTime.parse(goal.goalEndDate)).periodSince(LocalDate.dateTime(DateTime.parse(goal.goalStartDate))).days.toDouble();
-    }
-    else if(goal.goalPeriod == PeriodUnit.week)
-    {
-      factor = LocalDate.dateTime(DateTime.parse(goal.goalEndDate)).periodSince(LocalDate.dateTime(DateTime.parse(goal.goalStartDate))).days.toDouble() / 7;
-      print(factor);
-    }
-    else 
-    {
-      factor = LocalDate.dateTime(DateTime.parse(goal.goalEndDate)).periodSince(LocalDate.dateTime(DateTime.parse(goal.goalStartDate))).months.toDouble();
-    }
-
-    return (goal.goalQuantity * factor);
+  bool goalComplete(Goal goal) {
+    return DateTime.now().isAfter(DateTime.parse(goal.goalEndDate)) || goal.progressPercentage > 0.995;
   }
+
+  // double calculateTotal(Goal goal)
+  // {
+  //   double factor = 0;
+  //   if(goal.goalPeriod == PeriodUnit.day)
+  //   {
+  //     factor = LocalDate.dateTime(DateTime.parse(goal.goalEndDate)).periodSince(LocalDate.dateTime(DateTime.parse(goal.goalStartDate))).days.toDouble();
+  //   }
+  //   else if(goal.goalPeriod == PeriodUnit.week)
+  //   {
+  //     factor = LocalDate.dateTime(DateTime.parse(goal.goalEndDate)).periodSince(LocalDate.dateTime(DateTime.parse(goal.goalStartDate))).days.toDouble() / 7;
+  //     print(factor);
+  //   }
+  //   else 
+  //   {
+  //     factor = LocalDate.dateTime(DateTime.parse(goal.goalEndDate)).periodSince(LocalDate.dateTime(DateTime.parse(goal.goalStartDate))).months.toDouble();
+  //   }
+
+  //   return (goal.goalQuantity * factor);
+  // }
 
   // void _submitProgressForm(double units, String date, Goal goal, BuildContext context, ViewModel viewModel)
   // {
@@ -79,7 +83,7 @@ class GoalBox extends StatelessWidget {
        converter: (Store<AppState> store) => ViewModel.create(store),
         builder: (BuildContext context, ViewModel viewModel) {
           return Container(
-            height: 150,
+            height: 175,
             child: Card(
               margin: EdgeInsets.only(left: 20, bottom:20, top:20, right: 20),
               color: Theme.of(context).cardColor,
@@ -87,7 +91,7 @@ class GoalBox extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   Container(
-                    height: 150,
+                    height: 175,
                     width: maxWidth * 0.75,
                     child: GestureDetector(
                       onTap: () {startGoalTracker(context, goal, DateTime.now(),);},
@@ -105,6 +109,24 @@ class GoalBox extends StatelessWidget {
                             HorizontalProgressBar(
                               percentage: goal.progressPercentage, 
                             ),
+                            goalComplete(goal) ? 
+                            ElevatedButton(onPressed: () {
+                              Goal newGoal = Goal(
+                                goalName: goal.goalName, 
+                                goalVerb: goal.goalVerb, 
+                                goalQuantity: goal.goalQuantity, 
+                                goalUnits: goal.goalUnits, 
+                                goalPeriod: goal.goalPeriod, 
+                                goalStartDate: goal.goalStartDate, 
+                                goalEndDate: goal.goalEndDate, 
+                                goalId: goal.goalId, 
+                                progressPercentage: goal.progressPercentage,
+                                complete: true
+                                );
+                              viewModel.updateGoal(newGoal);
+                            }, 
+                            child: Text("Complete!")) : 
+                            SizedBox(),
                           ],
                         ),
                       ),

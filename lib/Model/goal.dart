@@ -20,6 +20,7 @@ class Goal {
   final Iterable<GoalProgress> goalProgress;
   final double progressPercentage;
   final int nextProgressId;
+  final bool complete;
 
   const Goal({
     required this.goalName,
@@ -33,6 +34,7 @@ class Goal {
     required this.progressPercentage,
     this.goalProgress = const Iterable.empty(),
     this.nextProgressId = 0,
+    this.complete = false,
     this.subGoal,
     this.goalContext,
   });

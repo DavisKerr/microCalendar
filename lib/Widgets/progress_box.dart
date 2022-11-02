@@ -53,7 +53,7 @@ class ProgressBox extends StatelessWidget {
             height: 75,
             padding: EdgeInsets.all(5),
             child: GestureDetector(
-              onTap: () {startGoalTracker(context, goal,  DateTime.parse(progress.dateString), progress.progress, true, progress.id);},
+              onTap: () {goal.complete ? startGoalTracker(context, goal,  DateTime.parse(progress.dateString), progress.progress, true, progress.id) : 1;},
               child: Card(
                 margin: EdgeInsets.only(left: 10, bottom:10, top:10, right: 10),
                 child: Column(

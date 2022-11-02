@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:micro_calendar/Screens/activity_log_screen.dart';
+import 'package:micro_calendar/Screens/completed_goal_screen.dart';
 import 'package:micro_calendar/Screens/create_goal_screen.dart';
 import 'package:micro_calendar/Screens/sign_up_screen.dart';
 import 'package:redux/redux.dart';
@@ -39,8 +40,14 @@ void navigateBack() async
 void navigateToSignUp() async
 {
   navigatorKey.currentState?.push(MaterialPageRoute(
-  builder: (BuildContext context) => SignUpScreen()
-));
+    builder: (BuildContext context) => SignUpScreen()
+  ));
+}
+
+void navigateToCompletedGoals() async {
+  navigatorKey.currentState?.push(MaterialPageRoute(
+    builder: (BuildContext context) => CompletedGoalScreen()
+  ));
 }
 
 void navigationMiddleware(
@@ -66,6 +73,10 @@ void navigationMiddleware(
   else if(action is NavigateToSignUpScreenAction)
   {
     navigateToSignUp();
+  }
+  else if(action is NavigateToCompletedGoalScreenAction)
+  {
+    navigateToCompletedGoals();
   }
 
   next(action);

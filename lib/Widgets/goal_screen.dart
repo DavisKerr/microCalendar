@@ -35,15 +35,16 @@ class GoalScreen extends StatelessWidget {
           StoreConnector<AppState, ViewModel>(
             converter: (Store<AppState> store) => ViewModel.create(store),
             builder: (BuildContext context, ViewModel viewModel) {
+              Iterable<Goal> nonCompleteGoals = viewModel.goalList.where((goal) => !goal.complete);
               return Container(
                 height: maxHeight * 0.85,
                 width: maxWidth * 0.9,
                 child: ListView.builder(
-                  itemCount: viewModel.goalList.length + 1,
+                  itemCount: nonCompleteGoals.length + 1,
                   itemBuilder: (context, index) {
-                    if(index < viewModel.goalList.length)
+                    if(index < nonCompleteGoals.length)
                     {
-                      final item = viewModel.goalList.elementAt(index);
+                      final item = nonCompleteGoals.elementAt(index);
                       return Container(
                         //height: (maxHeight * 0.85) * 0.20,
                         child: GoalBox(

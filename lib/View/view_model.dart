@@ -15,7 +15,7 @@ class ViewModel{
   String username;
   bool initLoading;
 
-  final Function (Goal newGoal) editGoal;
+  final Function (Goal newGoal) updateGoal;
   final Function (Goal toDelete) deleteGoal;
   final Function (Goal newGoal) createGoal;
   final Function (GoalProgress newProgress) updateProgress;
@@ -27,6 +27,7 @@ class ViewModel{
   final Function () navigateToGoalCreationScreen;
   final Function (Goal goal) navigateToActivityLogScreen;
   final Function () navigateToSignUpScreen;
+  final Function () navigateToCompletedGoalScreen;
   final Function () loadData;
 
   ViewModel(
@@ -35,7 +36,7 @@ class ViewModel{
     this.signedIn,
     this.username,
     this.initLoading,
-    this.editGoal,
+    this.updateGoal,
     this.deleteGoal,
     this.createGoal,
     this.updateProgress,
@@ -47,24 +48,25 @@ class ViewModel{
     this.navigateToGoalCreationScreen,
     this.navigateToActivityLogScreen,
     this.navigateToSignUpScreen,
+    this.navigateToCompletedGoalScreen,
     this.loadData,
   );
  
   factory ViewModel.create(Store<AppState> store){
-    _editGoal(Goal newGoal) {
+    _updateGoal(Goal newGoal) {
       store.dispatch(
-      ModifyGoalAction(newGoal)
+      UpdateGoalAttemptAction(newGoal)
     );
     }
 
     _deleteGoal(Goal toDelete) {
       store.dispatch(
-      DeleteGoalAction(toDelete)
+      DeleteGoalAttemptAction(toDelete.goalId)
     );
     }
 
     _createGoal(Goal newGoal) {
-      store.dispatch(AddGoalAction(newGoal));
+      store.dispatch(InsertGoalAttemptAction(newGoal));
     }
 
     _updateProgress(GoalProgress newProgress) {
@@ -121,6 +123,9 @@ class ViewModel{
         NavigateToSignUpScreenAction()
       );
     }
+    _navigateToCompletedGoalScreen() {
+      store.dispatch(NavigateToCompletedGoalScreenAction());
+    }
 
     _loadData() {
       store.dispatch(
@@ -134,7 +139,7 @@ class ViewModel{
       store.state.signedIn,
       store.state.username,
       store.state.initLoading,
-      _editGoal, 
+      _updateGoal, 
       _deleteGoal,
       _createGoal,
       _updateProgress,
@@ -146,6 +151,7 @@ class ViewModel{
       _navigateToGoalCreationScreen,
       _navigateToActivityLogScreen,
       _navigateToSIgnUpScreen,
+      _navigateToCompletedGoalScreen,
       _loadData,
     );
   }

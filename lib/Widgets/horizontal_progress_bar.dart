@@ -9,7 +9,7 @@ class HorizontalProgressBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: ((context, constraints) => 
       Container(
-        margin: EdgeInsets.only(bottom: 25, top: 10),
+        margin: EdgeInsets.only(bottom: 3, top: 10),
         child: Row(
           children: <Widget>[
             Container(

@@ -4,6 +4,7 @@ import 'package:micro_calendar/Middleware/screen_navigation_middleware.dart';
 import 'package:micro_calendar/Screens/activity_log_screen.dart';
 import 'package:micro_calendar/Screens/create_goal_screen.dart';
 import 'package:micro_calendar/Utils/navigator_key.dart';
+import 'package:micro_calendar/Widgets/main_app_menu_button.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -42,7 +43,6 @@ class MyApp extends StatelessWidget {
         theme: AppThemes.defaultTheme,
         home: StoreConnector<AppState, ViewModel>(
           converter: (Store<AppState> store) => ViewModel.create(store),
-          onDidChange: ((previousViewModel, viewModel) => print(viewModel.goalList.length)),
           builder: (BuildContext context, ViewModel viewModel) {
             if(_launching)
             {
@@ -83,7 +83,7 @@ class HomePage extends StatelessWidget {
       title: const Text('Goals', style: TextStyle(fontFamily: 'OpenSans')),
       centerTitle: true, 
       actions: <Widget>[
-        IconButton(icon: Icon(Icons.menu), onPressed: () {},),
+        MainAppMenuButton(),
         viewModel.signedIn ? 
         IconButton(icon: Icon(Icons.person), onPressed: () {}) :
         TextButton(

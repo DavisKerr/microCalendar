@@ -119,16 +119,16 @@ double calculateNewProgress(Iterable<GoalProgress> progress, Goal goal)
 
 Iterable<Goal> deleteGoal(
   Iterable<Goal> previousItems,
-  DeleteGoalAction action,
+  DeleteGoalSuccessAction action,
 ) {
-  return previousItems.where((Goal e) => e.goalId != action.goal.goalId);
+  return previousItems.where((Goal e) => e.goalId != action.goalId);
 }
 
 
 
 Iterable<Goal> addGoal(
   AppState previousState, 
-  AddGoalAction action
+  InsertGoalSuccessAction action
 ) {
   print("Working...");
   Goal newGoal = Goal(
@@ -139,31 +139,32 @@ Iterable<Goal> addGoal(
     goalPeriod: action.goal.goalPeriod,
     goalStartDate: action.goal.goalStartDate,
     goalEndDate: action.goal.goalEndDate,
-    goalId: previousState.nextGoalId,
+    goalId: action.goalId,
     progressPercentage: 0.0,
   );
 
   return previousState.goalList + newGoal;
 }
 
-Iterable<Goal> editGoal(
+Iterable<Goal> updateGoal(
   Iterable<Goal> previousItems,
-  ModifyGoalAction action
+  UpdateGoalSuccessAction action
 ) {
   return previousItems.map((Goal e) {
-    if(e.goalId == action.goal.goalId)
+    if(e.goalId == action.newGoal.goalId)
     {
       return Goal(
-        goalName: action.goal.goalName,
-        goalVerb: action.goal.goalVerb,
-        goalQuantity: action.goal.goalQuantity,
-        goalUnits: action.goal.goalUnits,
-        goalPeriod: action.goal.goalPeriod,
-        goalStartDate: e.goalStartDate,
-        goalEndDate: action.goal.goalEndDate,
+        goalName: action.newGoal.goalName,
+        goalVerb: action.newGoal.goalVerb,
+        goalQuantity: action.newGoal.goalQuantity,
+        goalUnits: action.newGoal.goalUnits,
+        goalPeriod: action.newGoal.goalPeriod,
+        goalStartDate: action.newGoal.goalStartDate,
+        goalEndDate: action.newGoal.goalEndDate,
         goalProgress: e.goalProgress,
         goalId: e.goalId,
         progressPercentage: e.progressPercentage,
+        complete: action.newGoal.complete
       );
     }
     else {
@@ -195,6 +196,7 @@ Iterable<Goal> addProgress(
         goalProgress: newProgress,
         progressPercentage: calculateNewProgress(newProgress, goal),
         nextProgressId: goal.nextProgressId + 1,
+        complete: goal.complete
       );
     }
     else {
@@ -224,6 +226,7 @@ Iterable<Goal> deleteProgress(
         goalProgress: newProgress,
         progressPercentage: calculateNewProgress(newProgress, goal),
         nextProgressId: goal.nextProgressId,
+        complete: goal.complete
       );
     }
     else {
@@ -256,6 +259,7 @@ Iterable<Goal> updateProgress(
         goalProgress: newProgress,
         progressPercentage: calculateNewProgress(newProgress, goal),
         nextProgressId: goal.nextProgressId,
+        complete: goal.complete
       );
     }
     else {
@@ -281,6 +285,7 @@ Iterable<Goal> loadData(LoadDataSuccessAction action)
         goalProgress: progress, //action.progress.where((element) => element.goalId == goal.goalId),
         progressPercentage: calculateNewProgress(progress, goal),
         nextProgressId: 7,
+        complete: goal.complete
       );
   });
 }
@@ -294,13 +299,14 @@ Iterable<Goal> modifyGoalListReducer(
     return loadData(action);
     //return oldAppState.goalList;
   }
-  else if(action is DeleteGoalAction) {
+  else if(action is DeleteGoalSuccessAction) {
+    print("deleting goal");
     return deleteGoal(oldAppState.goalList, action);
   }
-  else if(action is ModifyGoalAction) {
-    return editGoal(oldAppState.goalList, action);
+  else if(action is UpdateGoalSuccessAction) {
+    return updateGoal(oldAppState.goalList, action);
   }
-  else if(action is AddGoalAction) {
+  else if(action is InsertGoalSuccessAction) {
      return addGoal(oldAppState, action);
   }
   else if(action is InsertGoalProgressSuccessAction) {

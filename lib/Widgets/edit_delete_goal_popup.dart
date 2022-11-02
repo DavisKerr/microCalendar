@@ -53,7 +53,7 @@ class _EditDeleteGoalPopupState extends State<EditDeleteGoalPopup> {
     }); 
   }
 
-  void _deleteGoal(BuildContext context) {
+  void _deleteGoal() {
     widget.viewModel.deleteGoal(widget.goal);
     Navigator.of(context).pop();
   }
@@ -63,7 +63,7 @@ class _EditDeleteGoalPopupState extends State<EditDeleteGoalPopup> {
     showDialog(
       context: context, 
       builder: (BuildContext context) {
-        return ConfirmationWindow(onConfirmAction: _deleteGoal);}
+        return ConfirmationWindow(onConfirmAction: () => _deleteGoal());}
     );
   }
 
@@ -87,7 +87,7 @@ class _EditDeleteGoalPopupState extends State<EditDeleteGoalPopup> {
       goalId: widget.goal.goalId,
       progressPercentage: widget.goal.progressPercentage,
     );
-    widget.viewModel.editGoal(goal);
+    widget.viewModel.updateGoal(goal);
     Navigator.of(context).pop();
   }
 

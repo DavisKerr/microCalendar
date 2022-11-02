@@ -61,3 +61,40 @@ class UpdateGoalProgressSuccessAction extends DBAction {
   final GoalProgress newProgress;
   const UpdateGoalProgressSuccessAction(this.newProgress);
 }
+
+@immutable
+class InsertGoalAttemptAction extends DBAction {
+  final Goal goal;
+  const InsertGoalAttemptAction(this.goal);
+}
+
+@immutable
+class InsertGoalSuccessAction extends DBAction {
+  final int goalId;
+  final Goal goal;
+  const InsertGoalSuccessAction(this.goalId, this.goal);
+}
+
+@immutable
+class DeleteGoalAttemptAction extends DBAction {
+  final int goalId;
+  const DeleteGoalAttemptAction(this.goalId);
+}
+
+@immutable
+class DeleteGoalSuccessAction extends DBAction {
+  final int goalId;
+  const DeleteGoalSuccessAction(this.goalId);
+}
+
+@immutable
+class UpdateGoalAttemptAction extends DBAction {
+  final Goal newGoal;
+  const UpdateGoalAttemptAction(this.newGoal);
+}
+
+@immutable
+class UpdateGoalSuccessAction extends DBAction {
+  final Goal newGoal;
+  const UpdateGoalSuccessAction(this.newGoal);
+}

@@ -1,3 +1,6 @@
+import 'dart:ffi';
+
+import 'package:micro_calendar/Model/goal.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 import 'package:path/path.dart' as path;
 
@@ -37,11 +40,6 @@ class DBHelper {
     return db.rawQuery("SELECT * FROM goal_progress_table");
   }
 
-  static Future<List<Map<String, dynamic>>> getPeriod(String period) async {
-    final db = await DBHelper.database();
-    return db.query("goal_period_table", where: "goal_period_name = $period");
-  }
-
   static Future<int> insertProgress(double units, String dateString, int goalId) async {
     final db = await DBHelper.database();
     return db.insert("goal_progress_table", {
@@ -52,9 +50,14 @@ class DBHelper {
     });
   }
 
-  static Future<int> deleteProgress(int progressId) async {
+  static Future<int> deleteProgressById(int progressId) async {
     final db = await DBHelper.database();
     return db.delete("goal_progress_table", where: "progress_id = $progressId");
+  }
+
+    static Future<int> deleteProgressByGoalId(int goalId) async {
+    final db = await DBHelper.database();
+    return db.delete("goal_progress_table", where: "goal_id = $goalId");
   }
 
   static Future<int> updateProgress(double units, String dateString, int progressId) async {
@@ -66,6 +69,53 @@ class DBHelper {
           "progress_units" : units, 
       }
       ,where: "progress_id = $progressId"
+    );
+  }
+
+  static Future<int> insertGoal(
+    String name, String verb, String units,
+    double quantity, PeriodUnit period, 
+    String start, String end
+  ) async {
+    final db = await DBHelper.database();
+    return db.insert("goal_table", {
+        "goal_name" : name,
+        "goal_verb" : verb, 
+        "goal_quantity" : quantity, 
+        "goal_units" : units,
+        "goal_period" : period == PeriodUnit.day ? 1 : period == PeriodUnit.week ? 2 : 3,
+        "goal_start_date" : start,
+        "goal_end_date" : end,
+        "goal_completed" : 0,
+        "goal_date_created" : DateTime.now().toString(),
+        "goal_is_test_data" : 0
+    });
+  }
+
+  static Future<int> deleteGoal(int goalId) async {
+    final db = await DBHelper.database();
+    return db.delete("goal_table", where: "goal_id = $goalId");
+  }
+
+  static Future<int> updateGoal(String name, String verb, String units,
+    double quantity, PeriodUnit period, 
+    String start, String end, int goalId, bool complete) async {
+    final db = await DBHelper.database();
+    return db.update(
+      "goal_table",
+      {
+        "goal_name" : name,
+        "goal_verb" : verb, 
+        "goal_quantity" : quantity, 
+        "goal_units" : units,
+        "goal_period" : period == PeriodUnit.day ? 1 : period == PeriodUnit.week ? 2 : 3,
+        "goal_start_date" : start,
+        "goal_end_date" : end,
+        "goal_completed" : complete ? 1 : 0,
+        "goal_date_created" : DateTime.now().toString(),
+        "goal_is_test_data" : 0
+    },
+    where: "goal_id = $goalId"
     );
   }
 
