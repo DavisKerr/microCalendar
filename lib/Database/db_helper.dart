@@ -31,13 +31,13 @@ class DBHelper {
 
   static Future<List<Map<String, dynamic>>> getGoals(bool includeTest) async {
     final db = await DBHelper.database();
-    return db.rawQuery("SELECT * FROM goal_table");
+    return db.rawQuery("SELECT * FROM goal_table WHERE NOT goal_is_test_data");
   }
 
   static Future<List<Map<String, dynamic>>> getProgress() async {
     final db = await DBHelper.database();
     
-    return db.rawQuery("SELECT * FROM goal_progress_table");
+    return db.rawQuery("SELECT * FROM goal_progress_table WHERE NOT progress_is_test_data");
   }
 
   static Future<int> insertProgress(double units, String dateString, int goalId) async {
@@ -118,5 +118,44 @@ class DBHelper {
     where: "goal_id = $goalId"
     );
   }
+
+  static Future<int> insertGoalNotification(
+    String goalName, int goalId, String dateTime, int notificationPeriod
+  ) async {
+    final db = await DBHelper.database();
+    return db.insert("goal_notification_table", {
+        "goal_notification_name" : goalName,
+        "goal_notification_period" : notificationPeriod,
+        "goal_notification_datetime" : dateTime, 
+        "goal_id" : goalId,
+    });
+  }
+
+  static Future<int> deleteGoalNotification(
+    int goalId
+  ) async {
+    final db = await DBHelper.database();
+    return db.delete("goal_notification_table", where: "goal_id = $goalId");
+  }
+
+  static Future<List<Map<String, dynamic>>> getGoalNotifications(
+    int goalId
+  ) async {
+    print("Searching for notification with ID $goalId");
+    final db = await DBHelper.database();
+    return db.rawQuery("SELECT * FROM goal_notification_table WHERE goal_id = $goalId");
+  }
+
+  static Future<int> updateGoalNotification(
+    int goalId, int period, String dateTime
+  ) async {
+    final db = await DBHelper.database();
+    return db.update("goal_notification_table", 
+      {"goal_notification_period" : period, "goal_notification_datetime" : dateTime} ,
+      where: "goal_notification_id = $goalId"
+    );
+  }
+
+
 
 }

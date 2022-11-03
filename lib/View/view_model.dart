@@ -2,6 +2,7 @@ import 'package:micro_calendar/Actions/account_actions.dart';
 import 'package:micro_calendar/Actions/db_actions.dart';
 import 'package:micro_calendar/Actions/navigation_actions.dart';
 import 'package:micro_calendar/Model/goal.dart';
+import 'package:micro_calendar/Model/goal_notification.dart';
 import 'package:redux/redux.dart';
 import '../Actions/goal_actions.dart';
 import '../Model/goal_progress.dart';
@@ -10,6 +11,7 @@ import '../State/app_state.dart';
 class ViewModel{
   // AppState Properties
   Iterable<Goal> goalList;
+  GoalNotification notification;
   int nextGoalId;
   bool signedIn;
   String username;
@@ -18,6 +20,7 @@ class ViewModel{
   final Function (Goal newGoal) updateGoal;
   final Function (Goal toDelete) deleteGoal;
   final Function (Goal newGoal) createGoal;
+  final Function (Goal newGoal, GoalNotification newNotification) createGoalWithNotifications;
   final Function (GoalProgress newProgress) updateProgress;
   final Function (int progressId, int goalId) deleteProgress;
   final Function (Goal goal, GoalProgress newProgress) createProgress;
@@ -29,9 +32,11 @@ class ViewModel{
   final Function () navigateToSignUpScreen;
   final Function () navigateToCompletedGoalScreen;
   final Function () loadData;
+  final Function (GoalNotification notification) updateGoalNotification;
 
   ViewModel(
     this.goalList,
+    this.notification,
     this.nextGoalId, 
     this.signedIn,
     this.username,
@@ -39,6 +44,7 @@ class ViewModel{
     this.updateGoal,
     this.deleteGoal,
     this.createGoal,
+    this.createGoalWithNotifications,
     this.updateProgress,
     this.deleteProgress,
     this.createProgress,
@@ -50,6 +56,7 @@ class ViewModel{
     this.navigateToSignUpScreen,
     this.navigateToCompletedGoalScreen,
     this.loadData,
+    this.updateGoalNotification,
   );
  
   factory ViewModel.create(Store<AppState> store){
@@ -67,6 +74,10 @@ class ViewModel{
 
     _createGoal(Goal newGoal) {
       store.dispatch(InsertGoalAttemptAction(newGoal));
+    }
+
+    _createGoalWithNotification(Goal newGoal, GoalNotification newNotification) {
+      store.dispatch(InsertGoalWithNotificationAttemptAction(newGoal, newNotification));
     }
 
     _updateProgress(GoalProgress newProgress) {
@@ -132,9 +143,14 @@ class ViewModel{
         LoadDataAttemptAction()
       );
     }
+
+    _updateGoalNotification(GoalNotification notification) {
+      store.dispatch(UpdateGoalNotificationAttemptAction(notification));
+    }
   
     return ViewModel(
       store.state.goalList,
+      store.state.notification,
       store.state.nextGoalId,
       store.state.signedIn,
       store.state.username,
@@ -142,6 +158,7 @@ class ViewModel{
       _updateGoal, 
       _deleteGoal,
       _createGoal,
+      _createGoalWithNotification,
       _updateProgress,
       _deleteProgress,
       _createProgress,
@@ -153,6 +170,7 @@ class ViewModel{
       _navigateToSIgnUpScreen,
       _navigateToCompletedGoalScreen,
       _loadData,
+      _updateGoalNotification,
     );
   }
 }

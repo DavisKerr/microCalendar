@@ -10,10 +10,12 @@ import 'package:flutter_redux/flutter_redux.dart';
 
 import 'Middleware/account_middleware.dart';
 import 'Middleware/db_middleware.dart';
+import 'Middleware/notification_middleware.dart';
 import 'Model/goal.dart';
 
 import 'Screens/splash_screen.dart';
 import 'Utils/init.dart';
+import 'Utils/notification_service.dart';
 import 'View/view_model.dart';
 import 'Widgets/goal_screen.dart';
 import 'Reducers/Reducer.dart';
@@ -22,6 +24,8 @@ import 'Styles/app_themes.dart';
 
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  NotificationService().init();
   runApp(MyApp());
 }
 
@@ -33,7 +37,7 @@ class MyApp extends StatelessWidget {
         Store<AppState>(
           appStateReducer, 
           initialState: AppState.empty(),
-          middleware: [accountMiddleware, navigationMiddleware, dbMiddleware],
+          middleware: [accountMiddleware, navigationMiddleware, dbMiddleware, notificationMiddleware],
         );
     return StoreProvider<AppState>(
       store: store,

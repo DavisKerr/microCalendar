@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:micro_calendar/Actions/goal_actions.dart';
+import 'package:micro_calendar/Model/goal_notification.dart';
 import 'package:micro_calendar/Widgets/CreateGoalFormWidgets/create_goal_form_context.dart';
 import 'package:micro_calendar/Widgets/CreateGoalFormWidgets/create_goal_form_dates.dart';
 import 'package:micro_calendar/Widgets/CreateGoalFormWidgets/create_goal_form_end.dart';
@@ -45,6 +46,11 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
   String endDate = "00/00/00";
   ViewModel? viewModel = null;
 
+  bool enableNotifications = false;
+  String notificationTime = "";
+  int notificationPeriod = 0;
+
+
   void _updateStartDate(DateTime date)
   {
     setState(() {
@@ -73,7 +79,29 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
     });
   }
 
-    void _previousPage()
+  void _updateEnableNotificationsState(bool value)
+  {
+    setState(() {
+      enableNotifications = value;
+    });
+  }
+
+  void _updateNotificationTimeState(String value)
+  {
+    setState(() {
+      notificationTime = value;
+    });
+  }
+
+  void _updateNotificationPeriodState(String value)
+  {
+    setState(() {
+      notificationPeriod = value == "Day" ? 0 : 1;
+    });
+  }
+
+
+  void _previousPage()
   {
     pageController.previousPage(duration: Duration(milliseconds: 500), curve: Curves.easeIn);
   }
@@ -97,9 +125,17 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
       goalId: -1,
       progressPercentage: 0.0,
     );
+
+    GoalNotification newNotification = GoalNotification(notificationId: -1, goalName: newGoal.goalName, goalId: -1, timeAndDay: notificationTime, period: notificationPeriod);
+
     if(this.viewModel != null)
     {
-      this.viewModel!.createGoal(newGoal);
+      if(enableNotifications) {
+        this.viewModel!.createGoalWithNotifications(newGoal, newNotification);
+      }
+      else {
+        this.viewModel!.createGoal(newGoal);
+      }
     }
     
     
@@ -129,6 +165,7 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
 
     startDate = startDate != '00/00/00' ? startDate : '${DateUtils.dateOnly(DateTime.now())}';
     endDate = endDate != '00/00/00' ? endDate : '${DateUtils.dateOnly(DateTime.now().add(Duration(days: 90)))}';
+    notificationTime = notificationTime == "" ?  DateTime.now().toString() : notificationTime;
 
     return StoreConnector<AppState, ViewModel>(
       converter: (Store<AppState> store) => ViewModel.create(store),
@@ -217,6 +254,12 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
                 pageNumber: 11, 
                 nextPage: _nextPage, 
                 previousPage: _previousPage,
+                updateEnableNotifications: _updateEnableNotificationsState,
+                updateNotificationTime: _updateNotificationTimeState,
+                updateNotificationPeriod: _updateNotificationPeriodState,
+                includeNotifications: enableNotifications,
+                notificationTime: notificationTime,
+                chosenPeriod: notificationPeriod == 0 ? "Day" : "Week",
               ),
               CreateGoalFormEnd(
                 totalPages: 12, 

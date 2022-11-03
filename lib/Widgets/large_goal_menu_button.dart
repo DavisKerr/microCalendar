@@ -39,12 +39,17 @@ class LargeGoalMenuButton extends StatelessWidget {
     viewModel.navigateToActivityLogScreen(goal);
   }
 
+  _openNotificationEditMenu(BuildContext context)
+  {
+    startNotificationEditor(context, goal, viewModel);
+  }
+
   _openDeleteGoalConfirmationWindow(BuildContext context)
   {
     startConfirmationWindow(context, goal, _deleteGoal);
   }
 
-  void _deleteGoal(BuildContext context) {
+  void _deleteGoal() {
     viewModel.deleteGoal(goal);
   }
 
@@ -77,16 +82,23 @@ class LargeGoalMenuButton extends StatelessWidget {
                 title: Text('Edit Goal'),
               ),
             ),
-            const PopupMenuDivider(),
             const PopupMenuItem(
               value: 2,
+              child: ListTile(
+                leading: Icon(Icons.notifications_on),
+                title: Text('Edit Notifications'),
+              ),
+            ),
+            const PopupMenuDivider(),
+            const PopupMenuItem(
+              value: 3,
               child: ListTile(
                 leading: Icon(Icons.view_agenda),
                 title: Text('Activity Log'),
               ),
             ),
             const PopupMenuItem(
-              value: 3,
+              value: 4,
               child: ListTile(
                 leading: Icon(Icons.delete),
                 title: Text('Delete Goal'),
@@ -102,6 +114,9 @@ class LargeGoalMenuButton extends StatelessWidget {
               _openEditorMenu(context);
             }
             else if(value == 2) {
+              _openNotificationEditMenu(context);
+            }
+            else if(value == 3) {
               _openActivityLog(context);
             }
             else {

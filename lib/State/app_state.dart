@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:micro_calendar/Model/goal_notification.dart';
+
 import '../Model/goal.dart';
 import '../Model/goal_progress.dart';
 
@@ -9,6 +11,7 @@ import 'package:intl/intl.dart';
 @immutable
 class AppState {
   final Iterable<Goal> goalList;
+  final GoalNotification notification;
   final int nextGoalId;
   final bool signedIn;
   final String username;
@@ -20,10 +23,11 @@ class AppState {
     this.signedIn = false,
     this.username = "",
     this.initLoading = false,
+    this.notification = const GoalNotification.empty(),
   });
 
   const AppState.empty() 
-    : goalList =  const <Goal>[], nextGoalId = 0, signedIn = false, username = '', initLoading = false;
+    : goalList =  const <Goal>[], nextGoalId = 0, signedIn = false, username = '', initLoading = false, notification = const GoalNotification.empty();
 
   const AppState.test()
     : goalList = const <Goal>[
@@ -53,6 +57,7 @@ class AppState {
     nextGoalId = 2,
     signedIn = false,
     username = "",
-    initLoading = false;
+    initLoading = false,
+    notification = const GoalNotification.empty();
     
 }

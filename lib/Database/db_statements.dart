@@ -1,6 +1,7 @@
 
 const String dropGoalTable = "DROP TABLE IF EXISTS goal_table";
 const String dropGoalProgressTable = "DROP TABLE IF EXISTS goal_progress_table";
+const String dropGoalNotificationTable = "DROP TABLE IF EXISTS goal_notification_table";
 
 const String createGoalTable = '''CREATE TABLE goal_table(
   goal_id INTEGER PRIMARY KEY,
@@ -89,7 +90,17 @@ const insertIntoGoalProgressTable = '''INSERT INTO goal_progress_table(
       )
        ''';
 
-const List<String> buildDB = [dropGoalTable, dropGoalProgressTable, createGoalTable,
-createGoalProgressTable, insertIntoGoalTable, insertIntoGoalProgressTable];
+const createGoalNotificationTable = ''' CREATE TABLE goal_notification_table (
+    goal_notification_id INTEGER PRIMARY KEY,
+    goal_notification_name VARCHAR(60),
+    goal_notification_period INTEGER NOT NULL,
+    goal_notification_datetime VARCHAR(20),
+    goal_id INTEGER NOT NULL,
+    FOREIGN KEY (goal_id)
+       REFERENCES goal_table (goal_id)
+) ''';
+
+const List<String> buildDB = [dropGoalTable, dropGoalProgressTable, dropGoalNotificationTable, createGoalTable,
+createGoalProgressTable, createGoalNotificationTable, insertIntoGoalTable, insertIntoGoalProgressTable];
 
 

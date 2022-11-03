@@ -1,7 +1,9 @@
 import 'package:micro_calendar/Database/db_helper.dart';
+import 'package:micro_calendar/Model/goal_notification.dart';
 import 'package:redux/redux.dart';
 
 import '../Actions/db_actions.dart';
+import '../Actions/notification_actions.dart';
 import '../Model/goal.dart';
 import '../Model/goal_progress.dart';
 import '../State/app_state.dart';
@@ -67,6 +69,22 @@ Future<int> deleteGoal(int goalId) {
   return DBHelper.deleteGoal(goalId).then((_) => DBHelper.deleteProgressByGoalId(goalId));
 }
 
+Future<int> insertGoalNotification(String goalName, int goalId, String dateTime, int notificationPeriod) {
+    return DBHelper.insertGoalNotification(goalName, goalId, dateTime, notificationPeriod);
+}
+
+Future<int> deleteGoalNotification(int goalId) {
+  return DBHelper.deleteGoalNotification(goalId);
+}
+
+Future<List<Map<String, dynamic>>> getGoalNotifications(int goalId) {
+  return DBHelper.getGoalNotifications(goalId);
+}
+
+Future<int> updateGoalNotification(int goalId, int period, String dateTime) {
+    return DBHelper.updateGoalNotification(goalId, period, dateTime);
+}
+
 void dbMiddleware(
   Store<AppState> store,
   action,
@@ -110,7 +128,22 @@ void dbMiddleware(
   }
   else if(action is DeleteGoalAttemptAction) {
     print("deleting from db");
-    deleteGoal(action.goalId).then((_) => store.dispatch(DeleteGoalSuccessAction(action.goalId)));
+
+    getGoalNotifications(action.goalId).then((notifications) {
+      print(notifications);
+      deleteGoalNotification(action.goalId).then(
+      (deletedRows) {
+        deleteGoal(action.goalId).then((_) => store.dispatch(DeleteGoalSuccessAction(action.goalId)));
+        if(deletedRows > 0) {
+          deleteGoalNotification(action.goalId);
+        }
+      });
+      for(Map<String, dynamic> notification in notifications) {
+        print("Notification found");
+        store.dispatch(DeleteNotificationAction(notification["goal_notification_id"]));
+      }
+    });
+    
   }
   else if(action is UpdateGoalAttemptAction) {
     print("updating from db");
@@ -125,6 +158,49 @@ void dbMiddleware(
       action.newGoal.goalId,
       action.newGoal.complete
       ).then((_) => store.dispatch(UpdateGoalSuccessAction(action.newGoal)));
+  }
+  else if(action is InsertGoalWithNotificationAttemptAction)
+  {
+    insertGoal(
+      action.goal.goalName,
+      action.goal.goalVerb, 
+      action.goal.goalUnits, 
+      action.goal.goalQuantity, 
+      action.goal.goalPeriod,
+      action.goal.goalStartDate,
+      action.goal.goalEndDate,
+      ).then((id) {
+        store.dispatch(InsertGoalSuccessAction(id, action.goal));
+        GoalNotification newGoalNotification = GoalNotification(
+          notificationId: -1,
+          goalName: action.goal.goalName, 
+          timeAndDay: action.goalNotification.timeAndDay, 
+          goalId: id, 
+          period: action.goalNotification.period);
+        store.dispatch(InsertGoalNotificationAttemptAction(newGoalNotification));
+      });
+  }
+  else if(action is InsertGoalNotificationAttemptAction) {
+    insertGoalNotification(action.newGoalNotification.goalName, action.newGoalNotification.goalId, action.newGoalNotification.timeAndDay, action.newGoalNotification.period).then((id) {
+      store.dispatch(CreateNotificationAction(action.newGoalNotification, id));
+    });
+  }
+  else if(action is LoadGoalNotificationAttemptAction) {
+    getGoalNotifications(action.goalId).then((values) {
+      GoalNotification notification = GoalNotification(
+        notificationId: values.first["goal_notification_id"],
+        goalName: "", 
+        timeAndDay: values.first["goal_notification_datetime"], 
+        goalId: values.first["goal_id"], 
+        period: values.first["goal_notification_period"]);
+        store.dispatch(LoadGoalNotificationSuccessAction(notification));
+    });
+  }
+  else if(action is UpdateGoalNotificationAttemptAction)
+  {
+    updateGoalNotification(action.notification.goalId, action.notification.period, action.notification.timeAndDay).then((value) {
+      store.dispatch(UpdateGoalNotificationSuccessAction(action.notification));
+    });
   }
 
   next(action);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:micro_calendar/Widgets/modify_notification_popup.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
@@ -35,5 +36,12 @@ void startConfirmationWindow(BuildContext ctx, Goal goal, Function action) {
     showDialog(context: ctx,
       builder: (BuildContext context) {
         return EditDeleteGoalPopup(goal: goal, viewModel: viewModel,);
+    });
+  }
+
+    void startNotificationEditor(BuildContext ctx, Goal goal, ViewModel viewModel) {
+    showDialog(context: ctx,
+      builder: (BuildContext context) {
+        return EditGoalNotificationPopup(goal: goal, viewModel: viewModel,);
     });
   }

@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:micro_calendar/Actions/account_actions.dart';
 import 'package:micro_calendar/Actions/db_actions.dart';
+import 'package:micro_calendar/Model/goal_notification.dart';
 import 'package:time_machine/time_machine.dart';
 
 import '../State/app_state.dart';
@@ -375,6 +376,16 @@ String modifyUsernameReducer(String username, Action action)
   }
 }
 
+GoalNotification modifyNotificationReducer(GoalNotification notification, Action action) 
+{
+  if(action is LoadGoalNotificationSuccessAction) {
+    return action.notification;
+  }
+  else {
+    return notification;
+  }
+}
+
 AppState appStateReducer(
   AppState oldAppState,
   action
@@ -383,6 +394,7 @@ AppState appStateReducer(
   nextGoalId: modifyGoalIdCounterReducer(oldAppState, action),
   signedIn: modifySignInReducer(oldAppState.signedIn, action),
   username: modifyUsernameReducer(oldAppState.username, action),
-  initLoading: modifyinitLoadingReducer(oldAppState.initLoading, action)
+  initLoading: modifyinitLoadingReducer(oldAppState.initLoading, action),
+  notification: modifyNotificationReducer(oldAppState.notification, action)
 );
 

@@ -105,4 +105,11 @@ VALUES (
     1
 );
 
-
+CREATE TABLE goal_notification_table (
+    goal_notification_id INTEGER PRIMARY KEY,
+    goal_notification_period INTEGER NOT NULL,
+    goal_notification_datetime VARCHAR(20),
+    goal_id INTEGER NOT NULL,
+    FOREIGN KEY (goal_id)
+       REFERENCES goal_table (goal_id)
+);

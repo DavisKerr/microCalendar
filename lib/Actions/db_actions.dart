@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:micro_calendar/Model/goal_notification.dart';
 import 'package:micro_calendar/Model/goal_progress.dart';
 
 import '../Model/goal.dart';
@@ -76,6 +77,13 @@ class InsertGoalSuccessAction extends DBAction {
 }
 
 @immutable
+class InsertGoalWithNotificationAttemptAction extends DBAction {
+  final Goal goal;
+  final GoalNotification goalNotification;
+  const InsertGoalWithNotificationAttemptAction(this.goal, this.goalNotification);
+}
+
+@immutable
 class DeleteGoalAttemptAction extends DBAction {
   final int goalId;
   const DeleteGoalAttemptAction(this.goalId);
@@ -98,3 +106,42 @@ class UpdateGoalSuccessAction extends DBAction {
   final Goal newGoal;
   const UpdateGoalSuccessAction(this.newGoal);
 }
+
+@immutable
+class InsertGoalNotificationAttemptAction extends DBAction {
+  final GoalNotification newGoalNotification;
+  const InsertGoalNotificationAttemptAction(this.newGoalNotification);
+}
+
+@immutable
+class InsertGoalNotificationSuccessAction extends DBAction {
+  final GoalNotification newGoalNotification;
+  final int goalId;
+  const InsertGoalNotificationSuccessAction(this.newGoalNotification, this.goalId);
+}
+
+@immutable
+class LoadGoalNotificationAttemptAction extends DBAction {
+  final int goalId;
+  const LoadGoalNotificationAttemptAction(this.goalId);
+}
+
+@immutable
+class LoadGoalNotificationSuccessAction extends DBAction {
+  final GoalNotification notification;
+  const LoadGoalNotificationSuccessAction(this.notification);
+}
+
+@immutable 
+class UpdateGoalNotificationAttemptAction extends DBAction {
+  final GoalNotification notification;
+  const UpdateGoalNotificationAttemptAction(this.notification);
+}
+
+@immutable 
+class UpdateGoalNotificationSuccessAction extends DBAction {
+  final GoalNotification notification;
+  const UpdateGoalNotificationSuccessAction(this.notification);
+}
+
+
