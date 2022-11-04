@@ -67,7 +67,7 @@ class NotificationService {
     await flutterLocalNotificationsPlugin.zonedSchedule(
         notificationId,
         "Time to work on your goal!",
-        "It's time to work on your goal: ${newNotification.goalName} with ID ${newNotification.goalId}",
+        "It's time to work on your goal: ${newNotification.goalName}",
         tz.TZDateTime.parse(tz.local,newNotification.timeAndDay),
         //tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
         NotificationDetails(android: _androidNotificationDetails),

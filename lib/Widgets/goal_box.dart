@@ -44,39 +44,6 @@ class GoalBox extends StatelessWidget {
     return DateTime.now().isAfter(DateTime.parse(goal.goalEndDate)) || goal.progressPercentage > 0.995;
   }
 
-  // double calculateTotal(Goal goal)
-  // {
-  //   double factor = 0;
-  //   if(goal.goalPeriod == PeriodUnit.day)
-  //   {
-  //     factor = LocalDate.dateTime(DateTime.parse(goal.goalEndDate)).periodSince(LocalDate.dateTime(DateTime.parse(goal.goalStartDate))).days.toDouble();
-  //   }
-  //   else if(goal.goalPeriod == PeriodUnit.week)
-  //   {
-  //     factor = LocalDate.dateTime(DateTime.parse(goal.goalEndDate)).periodSince(LocalDate.dateTime(DateTime.parse(goal.goalStartDate))).days.toDouble() / 7;
-  //     print(factor);
-  //   }
-  //   else 
-  //   {
-  //     factor = LocalDate.dateTime(DateTime.parse(goal.goalEndDate)).periodSince(LocalDate.dateTime(DateTime.parse(goal.goalStartDate))).months.toDouble();
-  //   }
-
-  //   return (goal.goalQuantity * factor);
-  // }
-
-  // void _submitProgressForm(double units, String date, Goal goal, BuildContext context, ViewModel viewModel)
-  // {
-  //   GoalProgress newProgress = GoalProgress(progress: units, dateString: date, id: -1, goalId: goal.goalId);
-  //   viewModel.createProgress(goal, newProgress);
-  //   Navigator.of(context).pop();
-  // }
-
-  // double calculateProgress(Goal goal, ViewModel viewModel)
-  // {
-  //   Iterable<GoalProgress> progress = viewModel.goalProgress.where((element) => element.goalId == goal.goalId);
-  //   return progress.fold(0.0, (double prev, GoalProgress element) => prev + element.progress);
-  // }
-
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, ViewModel>(
@@ -123,7 +90,7 @@ class GoalBox extends StatelessWidget {
                                 progressPercentage: goal.progressPercentage,
                                 complete: true
                                 );
-                              viewModel.updateGoal(newGoal);
+                              viewModel.completeGoal(newGoal);
                             }, 
                             child: Text("Complete!")) : 
                             SizedBox(),

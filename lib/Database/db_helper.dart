@@ -16,7 +16,6 @@ class DBHelper {
       {
         await db.execute(query);
       }
-      //print(await db.rawQuery("SELECT * FROM goal_table"));
     }, version: 1);
   }
 
@@ -141,7 +140,6 @@ class DBHelper {
   static Future<List<Map<String, dynamic>>> getGoalNotifications(
     int goalId
   ) async {
-    print("Searching for notification with ID $goalId");
     final db = await DBHelper.database();
     return db.rawQuery("SELECT * FROM goal_notification_table WHERE goal_id = $goalId");
   }

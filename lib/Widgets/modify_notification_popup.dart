@@ -28,7 +28,8 @@ class EditGoalNotificationPopup extends StatefulWidget {
 
 class _EditGoalNotificationPopupState extends State<EditGoalNotificationPopup> {
 
-
+  bool loaded = false;
+  bool createdNotificationIfNoneProvided = false;
   bool enableNotifications = true;
   String notificationTime = "";
   int notificationPeriod = -1;
@@ -55,14 +56,24 @@ class _EditGoalNotificationPopupState extends State<EditGoalNotificationPopup> {
   }
 
   void _submitForm(ViewModel viewModel) {
-    print("Running like expected");
     GoalNotification updated = GoalNotification(
       notificationId: viewModel.notification.notificationId,
-      goalName: viewModel.notification.goalName, 
+      goalName: widget.goal.goalName, 
       timeAndDay: notificationTime, 
-      goalId: viewModel.notification.goalId, 
+      goalId: widget.goal.goalId, 
       period: notificationPeriod);
-    viewModel.updateGoalNotification(updated);
+    
+    if(updated.notificationId == -1 && enableNotifications == true)
+    {
+      viewModel.insertGoalNotification(updated);
+    }
+    else if(updated.notificationId != -1 && enableNotifications == false) 
+    {
+      viewModel.deleteGoalNotification(updated);
+    } 
+    else if(updated.notificationId != -1 && enableNotifications == true) {
+      viewModel.updateGoalNotification(updated);
+    }
     
   }
 
@@ -70,10 +81,11 @@ class _EditGoalNotificationPopupState extends State<EditGoalNotificationPopup> {
   Widget build(BuildContext context) {
     return StoreConnector<AppState, ViewModel>(
       converter: (Store<AppState> store) => ViewModel.create(store),
-      onInit: (store) => {store.dispatch(LoadGoalNotificationAttemptAction(widget.goal.goalId))},
       builder: (BuildContext context, ViewModel viewModel) {
 
-        if(viewModel.notification.goalId == -1) {
+        if(!loaded) {
+          viewModel.loadGoalNotification(widget.goal.goalId);
+          loaded = true;
           return AlertDialog(
             scrollable: true,
             title: Text('Edit ${widget.goal.goalName} Notifications'),
@@ -88,6 +100,12 @@ class _EditGoalNotificationPopupState extends State<EditGoalNotificationPopup> {
           );
         }
         else {
+          if(viewModel.notification.notificationId == -1 && !createdNotificationIfNoneProvided) {
+            enableNotifications = false;
+            notificationTime = DateTime.now().toString();
+            notificationPeriod = 0;
+            createdNotificationIfNoneProvided = true;
+          }
           
           notificationTime = notificationTime == "" ? viewModel.notification.timeAndDay : notificationTime;
           notificationPeriod = notificationPeriod == -1 ? viewModel.notification.period : notificationPeriod;

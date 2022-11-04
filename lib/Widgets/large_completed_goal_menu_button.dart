@@ -39,7 +39,7 @@ class LargeCompletedGoalMenuButton extends StatelessWidget {
       complete: false
     );
 
-    viewModel.updateGoal(newGoal);
+    viewModel.unCompleteGoal(newGoal);
   }
 
   _openActivityLog(BuildContext context)

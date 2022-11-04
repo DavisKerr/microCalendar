@@ -19,6 +19,8 @@ class ViewModel{
 
   final Function (Goal newGoal) updateGoal;
   final Function (Goal toDelete) deleteGoal;
+  final Function (Goal goal) completeGoal;  
+  final Function (Goal goal) unCompleteGoal;
   final Function (Goal newGoal) createGoal;
   final Function (Goal newGoal, GoalNotification newNotification) createGoalWithNotifications;
   final Function (GoalProgress newProgress) updateProgress;
@@ -33,6 +35,10 @@ class ViewModel{
   final Function () navigateToCompletedGoalScreen;
   final Function () loadData;
   final Function (GoalNotification notification) updateGoalNotification;
+  final Function (GoalNotification notification) insertGoalNotification;
+  final Function (GoalNotification notification) deleteGoalNotification;
+  final Function (int goalId) loadGoalNotification;
+
 
   ViewModel(
     this.goalList,
@@ -43,6 +49,8 @@ class ViewModel{
     this.initLoading,
     this.updateGoal,
     this.deleteGoal,
+    this.completeGoal,
+    this.unCompleteGoal,
     this.createGoal,
     this.createGoalWithNotifications,
     this.updateProgress,
@@ -57,6 +65,9 @@ class ViewModel{
     this.navigateToCompletedGoalScreen,
     this.loadData,
     this.updateGoalNotification,
+    this.insertGoalNotification,
+    this.deleteGoalNotification,
+    this.loadGoalNotification,
   );
  
   factory ViewModel.create(Store<AppState> store){
@@ -147,6 +158,26 @@ class ViewModel{
     _updateGoalNotification(GoalNotification notification) {
       store.dispatch(UpdateGoalNotificationAttemptAction(notification));
     }
+
+    _insertGoalNotification(GoalNotification notification) {
+      store.dispatch(InsertGoalNotificationAttemptAction(notification));
+    }
+
+    _deleteGoalNotification(GoalNotification notification) {
+      store.dispatch(DeleteGoalNotificationAttemptAction(notification));
+    }
+
+    _loadGoalNotification(int goalId) {
+      store.dispatch(LoadGoalNotificationAttemptAction(goalId));
+    }
+
+    _completeGoal(Goal goal) {
+      store.dispatch(CompleteGoalAttemptAction(goal));
+    }
+    
+    _unCompleteGoal(Goal goal) {
+      store.dispatch(UnCompleteGoalAttemptAction(goal));
+    }
   
     return ViewModel(
       store.state.goalList,
@@ -157,6 +188,8 @@ class ViewModel{
       store.state.initLoading,
       _updateGoal, 
       _deleteGoal,
+      _completeGoal,
+      _unCompleteGoal,
       _createGoal,
       _createGoalWithNotification,
       _updateProgress,
@@ -171,6 +204,9 @@ class ViewModel{
       _navigateToCompletedGoalScreen,
       _loadData,
       _updateGoalNotification,
+      _insertGoalNotification,
+      _deleteGoalNotification,
+      _loadGoalNotification,
     );
   }
 }

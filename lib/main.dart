@@ -14,7 +14,6 @@ import 'Middleware/notification_middleware.dart';
 import 'Model/goal.dart';
 
 import 'Screens/splash_screen.dart';
-import 'Utils/init.dart';
 import 'Utils/notification_service.dart';
 import 'View/view_model.dart';
 import 'Widgets/goal_screen.dart';

@@ -51,48 +51,48 @@ class CompletedGoalScreen extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final item = completeGoals.elementAt(index);
                   return Container(
-            height: 175,
-            child: Card(
-              margin: EdgeInsets.only(left: 20, bottom:20, top:20, right: 20),
-              color: Theme.of(context).cardColor,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Container(
                     height: 175,
-                    width: MediaQuery.of(context).size.width * 0.75,
-                    child: GestureDetector(
-                      onTap: () {},
-                      onLongPress: () {},
-                      child: Card(
-                        elevation: 0,
-                        margin: EdgeInsets.all(0),
-                        child: Column(
-                          children: <Widget>[
-                            Text(
-                              item.goalName,
-                              style: Theme.of(context).textTheme.titleMedium
+                    child: Card(
+                      margin: EdgeInsets.only(left: 20, bottom:20, top:20, right: 20),
+                      color: Theme.of(context).cardColor,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                            height: 175,
+                            width: MediaQuery.of(context).size.width * 0.75,
+                            child: GestureDetector(
+                              onTap: () {},
+                              onLongPress: () {},
+                              child: Card(
+                                elevation: 0,
+                                margin: EdgeInsets.all(0),
+                                child: Column(
+                                  children: <Widget>[
+                                    Text(
+                                      item.goalName,
+                                      style: Theme.of(context).textTheme.titleMedium
+                                    ),
+                                    HorizontalProgressBar(
+                                      percentage: item.progressPercentage, 
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
-                            HorizontalProgressBar(
-                              percentage: item.progressPercentage, 
-                            ),
-                          ],
-                        ),
+                          ),
+                          Flexible(
+                            child: LargeCompletedGoalMenuButton(
+                              height: MediaQuery.of(context).size.height - appBar.preferredSize.height,
+                              width: MediaQuery.of(context).size.width,
+                              goal: item,
+                              viewModel: viewModel,
+                            )
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                  Flexible(
-                    child: LargeCompletedGoalMenuButton(
-                      height: MediaQuery.of(context).size.height - appBar.preferredSize.height,
-                      width: MediaQuery.of(context).size.width,
-                      goal: item,
-                      viewModel: viewModel,
-                    )
-                  ),
-                ],
-              ),
-            ),
-          );
+                  );
                 },
               ),
             )

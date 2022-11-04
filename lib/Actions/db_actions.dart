@@ -144,4 +144,16 @@ class UpdateGoalNotificationSuccessAction extends DBAction {
   const UpdateGoalNotificationSuccessAction(this.notification);
 }
 
+@immutable 
+class DeleteGoalNotificationAttemptAction extends DBAction {
+  final GoalNotification notification;
+  const DeleteGoalNotificationAttemptAction(this.notification);
+}
+
+@immutable 
+class DeleteGoalNotificationSuccessAction extends DBAction {
+  final GoalNotification notification;
+  const DeleteGoalNotificationSuccessAction(this.notification);
+}
+
 

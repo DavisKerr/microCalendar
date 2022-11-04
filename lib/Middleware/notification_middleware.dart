@@ -18,11 +18,9 @@ void notificationMiddleware(
     notificationService.scheduleNotification(action.newGoalNotification, action.notificationId);
   }
   else if(action is DeleteNotificationAction) {
-    print("Canceled Notification");
     notificationService.cancelNotifications(action.notificationId);
   }
   else if(action is UpdateGoalNotificationSuccessAction) {
-    print("Replacing notification");
     notificationService.replaceNotification(action.notification);
   }
   

@@ -131,7 +131,6 @@ Iterable<Goal> addGoal(
   AppState previousState, 
   InsertGoalSuccessAction action
 ) {
-  print("Working...");
   Goal newGoal = Goal(
      goalName: action.goal.goalName,
     goalVerb: action.goal.goalVerb,
@@ -271,7 +270,6 @@ Iterable<Goal> updateProgress(
 
 Iterable<Goal> loadData(LoadDataSuccessAction action)
 {
-  //print(action.progress);
   return action.goals.map((goal) {
     Iterable<GoalProgress> progress = action.progress.where((e) => e.goalId == goal.goalId);
     return Goal(
@@ -301,7 +299,6 @@ Iterable<Goal> modifyGoalListReducer(
     //return oldAppState.goalList;
   }
   else if(action is DeleteGoalSuccessAction) {
-    print("deleting goal");
     return deleteGoal(oldAppState.goalList, action);
   }
   else if(action is UpdateGoalSuccessAction) {

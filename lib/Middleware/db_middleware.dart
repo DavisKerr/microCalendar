@@ -1,4 +1,6 @@
+import 'package:micro_calendar/Actions/goal_actions.dart';
 import 'package:micro_calendar/Database/db_helper.dart';
+import 'package:micro_calendar/Middleware/notification_middleware.dart';
 import 'package:micro_calendar/Model/goal_notification.dart';
 import 'package:redux/redux.dart';
 
@@ -22,7 +24,6 @@ Future<List<Goal>> loadGoals() async
   return DBHelper.getGoals(true).then((goals) => goals.map((goal) {
     
     int temp = 0;
-    // print(goal);
     
     return Goal(
       goalName: goal["goal_name"],
@@ -93,29 +94,24 @@ void dbMiddleware(
   if (action is LoadDataAttemptAction) {
     
     loadGoals().then((goals) => loadProgress().then((progress) => store.dispatch(LoadDataSuccessAction(goals, progress))).catchError((e) {
-      print(e);
     }));
   }
   else if(action is InsertGoalProgressAttemptAction)
   {
-    print("Inserting");
     insertProgress(action.goal.goalId, action.progress).then((id) => store.dispatch(InsertGoalProgressSuccessAction(action.goal.goalId, action.progress, id)));
   }
   else if(action is DeleteGoalProgressAttemptAction)
   {
-    print("Deleting");
     deleteProgressById(action.progressId).then((id) => store.dispatch(DeleteGoalProgressSuccessAction(action.goalId, id)));
   }
   else if( action is UpdateGoalProgressAttemptAction)
   {
-    print("Updating");
     updateProgress(action.newProgress.progress, action.newProgress.dateString, action.newProgress.id).then(
       (val) => store.dispatch(UpdateGoalProgressSuccessAction(action.newProgress))
     );
   }
   else if( action is InsertGoalAttemptAction)
   {
-    print("Inserting goal");
     insertGoal(
       action.goal.goalName, 
       action.goal.goalVerb, 
@@ -127,10 +123,8 @@ void dbMiddleware(
       ).then((id) => store.dispatch(InsertGoalSuccessAction(id, action.goal)));
   }
   else if(action is DeleteGoalAttemptAction) {
-    print("deleting from db");
 
     getGoalNotifications(action.goalId).then((notifications) {
-      print(notifications);
       deleteGoalNotification(action.goalId).then(
       (deletedRows) {
         deleteGoal(action.goalId).then((_) => store.dispatch(DeleteGoalSuccessAction(action.goalId)));
@@ -139,14 +133,12 @@ void dbMiddleware(
         }
       });
       for(Map<String, dynamic> notification in notifications) {
-        print("Notification found");
         store.dispatch(DeleteNotificationAction(notification["goal_notification_id"]));
       }
     });
     
   }
   else if(action is UpdateGoalAttemptAction) {
-    print("updating from db");
     updateGoal(
       action.newGoal.goalName, 
       action.newGoal.goalVerb, 
@@ -158,6 +150,81 @@ void dbMiddleware(
       action.newGoal.goalId,
       action.newGoal.complete
       ).then((_) => store.dispatch(UpdateGoalSuccessAction(action.newGoal)));
+  }
+  else if(action is CompleteGoalAttemptAction) {
+
+    Goal completeGoal = Goal(
+      goalName: action.goal.goalName,
+      goalVerb: action.goal.goalVerb,
+      goalQuantity: action.goal.goalQuantity,
+      goalUnits: action.goal.goalUnits,
+      goalPeriod: action.goal.goalPeriod,
+      goalStartDate: action.goal.goalStartDate,
+      goalEndDate: action.goal.goalEndDate,
+      goalId: action.goal.goalId,
+      goalProgress: action.goal.goalProgress, //action.progress.where((element) => element.goalId == goal.goalId),
+      progressPercentage: action.goal.progressPercentage,
+      nextProgressId: action.goal.nextProgressId,
+      complete: true,
+    );
+
+    getGoalNotifications(action.goal.goalId).then((notifications) {
+      if(notifications.isNotEmpty)
+      {
+        store.dispatch(DeleteNotificationAction(notifications.first["goal_notification_id"]));
+      }
+      updateGoal(
+        action.goal.goalName, 
+        action.goal.goalVerb, 
+        action.goal.goalUnits, 
+        action.goal.goalQuantity, 
+        action.goal.goalPeriod,
+        action.goal.goalStartDate,
+        action.goal.goalEndDate,
+        action.goal.goalId,
+        true
+      ).then((_) => store.dispatch(UpdateGoalSuccessAction(completeGoal)));
+    });
+  }
+  else if(action is UnCompleteGoalAttemptAction) {
+    Goal unCompleteGoal = Goal(
+      goalName: action.goal.goalName,
+      goalVerb: action.goal.goalVerb,
+      goalQuantity: action.goal.goalQuantity,
+      goalUnits: action.goal.goalUnits,
+      goalPeriod: action.goal.goalPeriod,
+      goalStartDate: action.goal.goalStartDate,
+      goalEndDate: action.goal.goalEndDate,
+      goalId: action.goal.goalId,
+      goalProgress: action.goal.goalProgress, //action.progress.where((element) => element.goalId == goal.goalId),
+      progressPercentage: action.goal.progressPercentage,
+      nextProgressId: action.goal.nextProgressId,
+      complete: false,
+    );
+
+    getGoalNotifications(action.goal.goalId).then((notifications) {
+      if(notifications.isNotEmpty)
+      {
+        GoalNotification notification = GoalNotification(
+          notificationId: notifications.first["goal_notification_id"], 
+          goalName: notifications.first["goal_notification_name"], 
+          timeAndDay: notifications.first["goal_notification_datetime"], 
+          goalId: notifications.first["goal_id"], 
+          period: notifications.first["goal_notification_period"]);
+        store.dispatch(CreateNotificationAction(notification, notification.notificationId));
+      }
+      updateGoal(
+        action.goal.goalName, 
+        action.goal.goalVerb, 
+        action.goal.goalUnits, 
+        action.goal.goalQuantity, 
+        action.goal.goalPeriod,
+        action.goal.goalStartDate,
+        action.goal.goalEndDate,
+        action.goal.goalId,
+        false
+      ).then((_) => store.dispatch(UpdateGoalSuccessAction(unCompleteGoal)));
+    });
   }
   else if(action is InsertGoalWithNotificationAttemptAction)
   {
@@ -187,13 +254,28 @@ void dbMiddleware(
   }
   else if(action is LoadGoalNotificationAttemptAction) {
     getGoalNotifications(action.goalId).then((values) {
-      GoalNotification notification = GoalNotification(
+      if(values.isEmpty)
+      {
+        GoalNotification notification = GoalNotification(
+          notificationId: -1, 
+          goalName: "", 
+          timeAndDay: "", 
+          goalId: action.goalId, 
+          period: -1
+        );
+        store.dispatch(LoadGoalNotificationSuccessAction(notification));
+      }
+      else 
+      {
+        GoalNotification notification = GoalNotification(
         notificationId: values.first["goal_notification_id"],
         goalName: "", 
         timeAndDay: values.first["goal_notification_datetime"], 
         goalId: values.first["goal_id"], 
         period: values.first["goal_notification_period"]);
         store.dispatch(LoadGoalNotificationSuccessAction(notification));
+      }
+      
     });
   }
   else if(action is UpdateGoalNotificationAttemptAction)
@@ -201,6 +283,10 @@ void dbMiddleware(
     updateGoalNotification(action.notification.goalId, action.notification.period, action.notification.timeAndDay).then((value) {
       store.dispatch(UpdateGoalNotificationSuccessAction(action.notification));
     });
+  }
+  else if(action is DeleteGoalNotificationAttemptAction) {
+    deleteGoalNotification(action.notification.goalId).then((rows) => 
+      notificationService.cancelNotifications(action.notification.notificationId));
   }
 
   next(action);

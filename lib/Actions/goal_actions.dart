@@ -49,4 +49,24 @@ class DeleteGoalProgressAction extends GoalAction {
   const DeleteGoalProgressAction(Goal goal, this.progress) : super(goal);
 }
 
+@immutable 
+class CompleteGoalAttemptAction extends GoalAction {
+  const CompleteGoalAttemptAction(Goal goal) : super(goal);
+}
+
+@immutable 
+class CompleteGoalSuccessAction extends GoalAction {
+  const CompleteGoalSuccessAction(Goal goal) : super(goal);
+}
+
+@immutable 
+class UnCompleteGoalAttemptAction extends GoalAction {
+  const UnCompleteGoalAttemptAction(Goal goal) : super(goal);
+}
+
+@immutable 
+class UnCompleteGoalSuccessAction extends GoalAction {
+  const UnCompleteGoalSuccessAction(Goal goal) : super(goal);
+}
+
 
