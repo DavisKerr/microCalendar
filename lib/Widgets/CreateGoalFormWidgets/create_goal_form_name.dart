@@ -16,6 +16,8 @@ class CreateGoalFormName extends StatefulWidget {
   final Function nextPage;
   final Function previousPage;
   final TextEditingController nameController;
+  final bool nameError;
+  final Function checkNameError;
   
   const CreateGoalFormName({
     required this.totalPages, 
@@ -23,6 +25,8 @@ class CreateGoalFormName extends StatefulWidget {
     required this.nextPage,
     required this.previousPage,
     required this.nameController,
+    required this.nameError,
+    required this.checkNameError,
     });
 
   @override
@@ -31,6 +35,12 @@ class CreateGoalFormName extends StatefulWidget {
 
 class _CreateGoalFormNameState extends State<CreateGoalFormName> {
 
+  void _onNextClicked() {
+    if(!widget.checkNameError())
+    {
+      widget.nextPage();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +57,7 @@ class _CreateGoalFormNameState extends State<CreateGoalFormName> {
               Container(
                 height: viewModel.maxHeight * 0.5,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     Text(
                       '''We can start by giving your goal a name!''',
@@ -55,6 +65,15 @@ class _CreateGoalFormNameState extends State<CreateGoalFormName> {
                       textAlign: TextAlign.center,
                       textScaleFactor: viewModel.maxWidth > 400 && viewModel.maxHeight > 400 ? 1 : .75,
                     ),
+                    widget.nameError ? 
+                      Text(
+                        '''Goal names must have only letters and numbers and be less than 30 characters!''',
+                        style: appStyle.AppThemes.errorText,
+                        textAlign: TextAlign.center,
+                        textScaleFactor: viewModel.maxWidth > 400 && viewModel.maxHeight > 400 ? 1 : .75,
+                      )
+                    : 
+                    SizedBox(height: 14),
                     Container(
                       width: viewModel.maxWidth * 0.6 - 45,
                       child: TextField(
@@ -64,6 +83,7 @@ class _CreateGoalFormNameState extends State<CreateGoalFormName> {
                         style: TextStyle(fontSize: 24 * (viewModel.maxWidth > 400 && viewModel.maxHeight > 400 ? 1 : .75)),
                         ),
                     ),
+                    
                   ],
                 ),
               ),  
@@ -71,7 +91,7 @@ class _CreateGoalFormNameState extends State<CreateGoalFormName> {
                 totalPages: widget.totalPages, 
                 currentPage: widget.pageNumber, 
                 onBackClicked: widget.previousPage, 
-                onNextClicked: widget.nextPage, 
+                onNextClicked: _onNextClicked, 
                 backText: "Back", 
                 nextText: "Next")
             ]

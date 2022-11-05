@@ -60,7 +60,7 @@ class ProgressBox extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text("Tracked ${progress.progress} $units(s)"),
-                    Text("on ${DateFormat.yMd().format(DateTime.parse(progress.dateString))} at ${DateFormat.Hms().format(DateTime.parse(progress.dateString))}"),
+                    Text("on ${DateFormat.yMd().format(DateTime.parse(progress.dateString))}"),
                   ],
                 ),
               ),

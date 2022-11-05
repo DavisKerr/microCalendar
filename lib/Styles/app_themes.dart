@@ -25,7 +25,7 @@ abstract class AppThemes {
         fontFamily: 'OpenSans', 
         fontSize: 23,
         fontStyle: FontStyle.italic
-      )
+      ),
     ).apply(
       bodyColor: Colors.black,
     ),
@@ -35,5 +35,13 @@ abstract class AppThemes {
       backgroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 229, 203, 159),),
       
     );
+  
+  static const TextStyle errorText = TextStyle(
+    fontFamily: 'OpenSans', 
+    fontSize: 14,
+    fontStyle: FontStyle.italic,
+    color: Colors.red,
+
+  );
       
 }

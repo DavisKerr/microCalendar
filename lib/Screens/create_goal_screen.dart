@@ -49,6 +49,94 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
   String notificationTime = "";
   int notificationPeriod = 0;
 
+  bool nameError = false;
+  bool verbError = false; 
+  bool measurementError = false;
+  bool quantityError = false;
+  bool contextError = false;
+  
+  /*
+  * Error Handling functions
+  */
+  bool _checkNameError() {
+    String name = nameController.text;
+    final pattern = RegExp(r'^[a-zA-Z0-9 ]+$');
+    if(pattern.hasMatch(name) && name.length < 30) {
+      setState(() {
+        nameError = false;
+      });
+    }
+    else {
+      setState(() {
+        nameError = true;
+      });
+    }
+    return nameError;
+  }
+
+  bool _checkVerbError() {
+    String verb = verbController.text;
+    final pattern = RegExp(r'^[a-zA-Z0-9 ]+$');
+    if(pattern.hasMatch(verb) && verb.length < 20) {
+      setState(() {
+        verbError = false;
+      });
+    }
+    else {
+      setState(() {
+        verbError = true;
+      });
+    }
+    return verbError;
+  }
+
+  bool _checkMeasurementError() {
+    String measurement = measurementController.text;
+    final pattern = RegExp(r'^[a-zA-Z0-9 ]+$');
+    if(pattern.hasMatch(measurement) && measurement.length < 20) {
+      setState(() {
+        measurementError = false;
+      });
+    }
+    else {
+      setState(() {
+        measurementError = true;
+      });
+    }
+    return measurementError;
+  }
+
+  bool _checkQuantityError() {
+    String quantity = quantityController.text;
+    final pattern = RegExp(r'^[0-9]+$');
+    if(pattern.hasMatch(quantity) && quantity.length < 20) {
+      setState(() {
+        quantityError = false;
+      });
+    }
+    else {
+      setState(() {
+        quantityError = true;
+      });
+    }
+    return quantityError;
+  }
+
+  bool _checkContextError() {
+    String context = contextController.text;
+    final pattern = RegExp(r'^[a-zA-Z0-9 ]*$');
+    if(pattern.hasMatch(context) && context.length < 50) {
+      setState(() {
+        contextError = false;
+      });
+    }
+    else {
+      setState(() {
+        contextError = true;
+      });
+    }
+    return contextError;
+  }
 
   void _updateStartDate(DateTime date)
   {
@@ -105,6 +193,7 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
 
   void _submitGoal()
   {
+    print("Submitting...");
     Goal newGoal = Goal(
       goalName: nameController.text,
       goalVerb: verbController.text,
@@ -179,6 +268,7 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
               );
             }
             return Scaffold(
+              resizeToAvoidBottomInset : false,
               appBar: appBar,
               body: Container(
                 width: viewModel.maxWidth,
@@ -203,7 +293,9 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
                       pageNumber: 3, 
                       nextPage: _nextPage, 
                       previousPage: _previousPage, 
-                      nameController: nameController
+                      nameController: nameController,
+                      nameError: nameError,
+                      checkNameError: _checkNameError,
                     ),
                     CreateGoalFormVerb(
                       totalPages: 12, 
@@ -211,20 +303,27 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
                       nextPage: _nextPage, 
                       previousPage: _previousPage,
                       verbController: verbController,
+                      verbError: verbError,
+                      checkVerbError: _checkVerbError,
                     ),
                     CreateGoalFormMeasurement(
                       totalPages: 12, 
                       pageNumber: 5,
                       nextPage: _nextPage, 
                       previousPage: _previousPage, 
-                      measurmentController: measurementController
+                      measurmentController: measurementController,
+                      measurementError: measurementError,
+                      checkMeasurementError: _checkMeasurementError,
                     ),
                     CreateGoalFormQuantity(
                       totalPages: 12, 
                       pageNumber: 6, 
                       nextPage: _nextPage, 
                       previousPage: _previousPage, 
-                      quantityController: quantityController),
+                      quantityController: quantityController,
+                      quantityError: quantityError,
+                      checkQuantityError: _checkQuantityError,
+                    ),
                     CreateGoalFormMidwayCheck(
                       totalPages: 12, 
                       pageNumber: 7, 
@@ -246,7 +345,10 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
                       pageNumber: 9, 
                       nextPage: _nextPage, 
                       previousPage: _previousPage, 
-                      contextController: contextController),
+                      contextController: contextController,
+                      contextError: contextError,
+                      checkContextError: _checkContextError,
+                    ),
                     CreateGoalFormDates(
                       totalPages: 12, 
                       pageNumber: 10, 

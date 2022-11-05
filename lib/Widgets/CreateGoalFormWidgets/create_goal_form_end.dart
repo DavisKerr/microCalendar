@@ -50,7 +50,7 @@ class CreateGoalFormEnd extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget> [
               Container(
-                height: viewModel.maxHeight * 0.7,
+                height: viewModel.maxHeight * 0.6,
                 child: Column(
                   children: <Widget>[
                     Text(

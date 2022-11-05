@@ -104,10 +104,11 @@ class _CreateGoalFormNotificationsState extends State<CreateGoalFormNotification
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget> [
               Container(
+                height: viewModel.maxHeight * 0.6,
                 child: Column(
                   children: <Widget>[
                     Container(
-                      height: viewModel.maxHeight * 0.3,
+                      height: viewModel.maxHeight * 0.25,
                       child: Column(
                         children: <Widget>[
                           Text(

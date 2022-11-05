@@ -36,11 +36,11 @@ class CreateGoalFooter extends StatelessWidget {
       builder: (BuildContext context, ViewModel viewModel) {
         return Container(
           width: viewModel.maxWidth,
-          height: viewModel.maxHeight * 0.2,
+          height: viewModel.maxHeight * 0.3,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              BackAndNextButtons(onBackClicked: onBackClicked, onNextClicked: onNextClicked),
+              BackAndNextButtons(onBackClicked: onBackClicked, onNextClicked: onNextClicked,nextText: nextText,),
               viewModel.maxWidth > 315 ?
                 ScreenTrackerIndicators(
                   numPages: totalPages, 

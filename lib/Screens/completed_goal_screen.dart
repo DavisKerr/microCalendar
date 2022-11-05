@@ -56,6 +56,7 @@ class CompletedGoalScreen extends StatelessWidget {
               );
             }
               return Scaffold(
+                resizeToAvoidBottomInset : false,
                 appBar: appBar,
                 body: Container(
                   height: viewModel.maxHeight,
@@ -68,7 +69,7 @@ class CompletedGoalScreen extends StatelessWidget {
                         width: viewModel.maxWidth * .75,
                         height: 150,
                         child: Card(
-                          margin: EdgeInsets.only(left: 20, bottom:20, top:20, right: 20),
+                          margin: EdgeInsets.only(left: 20, bottom:20, top:7, right: 7),
                           color: Theme.of(context).cardColor,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,

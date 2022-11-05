@@ -16,6 +16,8 @@ class CreateGoalFormVerb extends StatefulWidget {
   final Function nextPage;
   final Function previousPage;
   final TextEditingController verbController;
+  final bool verbError;
+  final Function checkVerbError;
   
   const CreateGoalFormVerb({
     required this.totalPages, 
@@ -23,6 +25,8 @@ class CreateGoalFormVerb extends StatefulWidget {
     required this.nextPage,
     required this.previousPage,
     required this.verbController,
+    required this.verbError,
+    required this.checkVerbError
     });
 
   @override
@@ -31,6 +35,12 @@ class CreateGoalFormVerb extends StatefulWidget {
 
 class _CreateGoalFormVerbState extends State<CreateGoalFormVerb> {
 
+  void _onNextClicked() {
+    if(!widget.checkVerbError())
+    {
+      widget.nextPage();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +55,7 @@ class _CreateGoalFormVerbState extends State<CreateGoalFormVerb> {
               Container(
                 height: viewModel.maxHeight * 0.5,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     Text(
                       '''Let’s start with a goal verb. This is the “what” of your goal.''',
@@ -53,6 +63,15 @@ class _CreateGoalFormVerbState extends State<CreateGoalFormVerb> {
                       textAlign: TextAlign.center,
                       textScaleFactor: viewModel.maxWidth > 400 && viewModel.maxHeight > 400 ? 1 : .75,
                     ),
+                    widget.verbError ? 
+                      Text(
+                        '''Goal verbs must have only letters and numbers and be less than 30 characters!''',
+                        style: appStyle.AppThemes.errorText,
+                        textAlign: TextAlign.center,
+                        textScaleFactor: viewModel.maxWidth > 400 && viewModel.maxHeight > 400 ? 1 : .75,
+                      )
+                    : 
+                    SizedBox(height: 14),
                     Container(
                       width: viewModel.maxWidth * 0.75,
                       child: TextField(
@@ -70,7 +89,7 @@ class _CreateGoalFormVerbState extends State<CreateGoalFormVerb> {
                 totalPages: widget.totalPages, 
                 currentPage: widget.pageNumber, 
                 onBackClicked: widget.previousPage, 
-                onNextClicked: widget.nextPage, 
+                onNextClicked: _onNextClicked, 
                 backText: "Back", 
                 nextText: "Next")
             ]

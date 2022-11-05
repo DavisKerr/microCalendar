@@ -17,6 +17,8 @@ class CreateGoalFormMeasurement extends StatefulWidget {
   final Function nextPage;
   final Function previousPage;
   final TextEditingController measurmentController;
+  final bool measurementError;
+  final Function checkMeasurementError;
   
   const CreateGoalFormMeasurement({
     required this.totalPages, 
@@ -24,6 +26,8 @@ class CreateGoalFormMeasurement extends StatefulWidget {
     required this.nextPage,
     required this.previousPage,
     required this.measurmentController,
+    required this.measurementError,
+    required this.checkMeasurementError,
     });
 
   @override
@@ -32,6 +36,12 @@ class CreateGoalFormMeasurement extends StatefulWidget {
 
 class _CreateGoalFormMeasurementState extends State<CreateGoalFormMeasurement> {
 
+  void _onNextClicked() {
+    if(!widget.checkMeasurementError())
+    {
+      widget.nextPage();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +54,9 @@ class _CreateGoalFormMeasurementState extends State<CreateGoalFormMeasurement> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget> [
               Container(
+                height: viewModel.maxHeight * 0.5,
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     Text(
                       '''Now let’s add a goal measurement. This is whatyou will use to track your goal. This could be minutes, pounds, lessons, etc.''',
@@ -52,6 +64,15 @@ class _CreateGoalFormMeasurementState extends State<CreateGoalFormMeasurement> {
                       textAlign: TextAlign.center,
                       textScaleFactor: viewModel.maxWidth > 400 && viewModel.maxHeight > 400 ? 1 : .75,
                     ),
+                    widget.measurementError ? 
+                      Text(
+                          '''Goal measurements must have only letters and numbers and be less than 30 characters!''',
+                          style: appStyle.AppThemes.errorText,
+                          textAlign: TextAlign.center,
+                          textScaleFactor: viewModel.maxWidth > 400 && viewModel.maxHeight > 400 ? 1 : .75,
+                      )
+                    : 
+                    SizedBox(height: 14),
                     Container(
                       width: viewModel.maxWidth * 0.75,
                       child: TextField(
@@ -68,7 +89,7 @@ class _CreateGoalFormMeasurementState extends State<CreateGoalFormMeasurement> {
                 totalPages: widget.totalPages, 
                 currentPage: widget.pageNumber, 
                 onBackClicked: widget.previousPage, 
-                onNextClicked: widget.nextPage, 
+                onNextClicked: _onNextClicked, 
                 backText: "Back", 
                 nextText: "Next"),
             ]

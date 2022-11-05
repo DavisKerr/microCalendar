@@ -3,6 +3,8 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
 import 'package:micro_calendar/Middleware/db_middleware.dart';
 
+import '../../Styles/app_themes.dart' as appStyle;
+
 import '../Model/goal.dart';
 import '../Model/goal_progress.dart';
 import '../Actions/goal_actions.dart';
@@ -36,23 +38,43 @@ class _TrackGoalPopupState extends State<TrackGoalPopup> {
   final TextEditingController amountController = TextEditingController();
 
   DateTime? _selectedDate;
+  bool error = false;
+
+  bool _checkError() {
+    String amount = amountController.text;
+    final pattern = RegExp(r'^[0-9]+$');
+    if(pattern.hasMatch(amount) && amount.length < 30) {
+      setState(() {
+        error = false;
+      });
+    }
+    else {
+      setState(() {
+        error = true;
+      });
+    }
+    return error;
+  }
 
   void _submitProgressForm(BuildContext context, ViewModel viewModel)
   {
-    GoalProgress newProgress = GoalProgress(
-      progress: double.parse(amountController.text), 
-      dateString: _selectedDate == null ?  "${DateUtils.dateOnly(DateTime.now())}" : "${DateUtils.dateOnly(_selectedDate!)}",
-      id: widget.progressId, 
-      goalId: widget.goal.goalId
-    );
-    if(widget.progressId == -1) {
-      viewModel.createProgress(widget.goal, newProgress);
-    }
-    else {
-      viewModel.updateProgress(newProgress);
+    if(!_checkError()) {
+      GoalProgress newProgress = GoalProgress(
+        progress: double.parse(amountController.text), 
+        dateString: _selectedDate == null ?  "${DateUtils.dateOnly(DateTime.now())}" : "${DateUtils.dateOnly(_selectedDate!)}",
+        id: widget.progressId, 
+        goalId: widget.goal.goalId
+      );
+      if(widget.progressId == -1) {
+        viewModel.createProgress(widget.goal, newProgress);
+      }
+      else {
+        viewModel.updateProgress(newProgress);
+      }
+      
+      Navigator.of(context).pop();
     }
     
-    Navigator.of(context).pop();
   }
 
   void _deleteProgressConfirm(BuildContext context, ViewModel viewModel)
@@ -110,6 +132,7 @@ class _TrackGoalPopupState extends State<TrackGoalPopup> {
             padding: const EdgeInsets.all(2.0),
             child: Column(
               children: <Widget>[
+                error ? const Text("Amounts must be numbers.", style: appStyle.AppThemes.errorText) : SizedBox(height: 14),
                 Row(
                   children: <Widget>[
                     const Text("Completed", style: TextStyle(fontSize: 14),),

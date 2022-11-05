@@ -17,6 +17,8 @@ class CreateGoalFormQuantity extends StatefulWidget {
   final Function nextPage;
   final Function previousPage;
   final TextEditingController quantityController;
+  final bool quantityError;
+  final Function checkQuantityError;
   
   const CreateGoalFormQuantity({
     required this.totalPages, 
@@ -24,6 +26,8 @@ class CreateGoalFormQuantity extends StatefulWidget {
     required this.nextPage,
     required this.previousPage,
     required this.quantityController,
+    required this.quantityError,
+    required this.checkQuantityError,
     });
 
   @override
@@ -31,6 +35,13 @@ class CreateGoalFormQuantity extends StatefulWidget {
 }
 
 class _CreateGoalFormQuantityState extends State<CreateGoalFormQuantity> {
+
+  void _onNextClicked() {
+    if(!widget.checkQuantityError())
+    {
+      widget.nextPage();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +56,7 @@ class _CreateGoalFormQuantityState extends State<CreateGoalFormQuantity> {
               Container(
                 height: viewModel.maxHeight * 0.5,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     Text(
                       '''Great! Now you need aquantity to make your goal truly measurable. This number is how many of the previous measurment you want to do.''',
@@ -53,10 +64,19 @@ class _CreateGoalFormQuantityState extends State<CreateGoalFormQuantity> {
                       textAlign: TextAlign.center,
                       textScaleFactor: viewModel.maxWidth > 400 && viewModel.maxHeight > 400 ? 1 : .75,
                     ),
+                    widget.quantityError ? 
+                      Text(
+                          '''Goal quantities must have only numbers!''',
+                          style: appStyle.AppThemes.errorText,
+                          textAlign: TextAlign.center,
+                          textScaleFactor: viewModel.maxWidth > 400 && viewModel.maxHeight > 400 ? 1 : .75,
+                        )
+                    : 
+                    SizedBox(height: 14),
                     Container(
                       width: viewModel.maxWidth * 0.75,
                       child: TextField(
-                        keyboardType: TextInputType.text,
+                        keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
                         decoration: InputDecoration(labelText: "Quantity", hintText: "Quantity", floatingLabelBehavior: FloatingLabelBehavior.never,),
                         controller: widget.quantityController,
                         style: TextStyle(fontSize: 24 * (viewModel.maxWidth > 400 && viewModel.maxHeight > 400 ? 1 : .75)),
@@ -69,7 +89,7 @@ class _CreateGoalFormQuantityState extends State<CreateGoalFormQuantity> {
                 totalPages: widget.totalPages, 
                 currentPage: widget.pageNumber, 
                 onBackClicked: widget.previousPage, 
-                onNextClicked: widget.nextPage, 
+                onNextClicked: _onNextClicked, 
                 backText: "Back", 
                 nextText: "Next")
             ]

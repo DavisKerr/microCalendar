@@ -49,18 +49,19 @@ class ActivityLogScreen extends StatelessWidget {
 
           return OrientationBuilder(
           builder: (context, orientation) {
-             if(
+            if(
               MediaQuery.of(context).size.height - appBar.preferredSize.height != viewModel.maxHeight ||
               MediaQuery.of(context).size.width != viewModel.maxWidth
             ) {
               viewModel.setScreenDimensions(
-                MediaQuery.of(context).size.height - appBar.preferredSize.height - MediaQuery.of(context).padding.top,
+                MediaQuery.of(context).size.height - appBar.preferredSize.height,
                 MediaQuery.of(context).size.width,
                 MediaQuery.of(context).textScaleFactor
               );
             }
             
               return Scaffold(
+                resizeToAvoidBottomInset : false,
                 appBar: appBar,
                 body: Container(
                   height: viewModel.maxHeight,

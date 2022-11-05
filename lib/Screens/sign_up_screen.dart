@@ -51,38 +51,39 @@ class _SignUpScreenState extends State<SignUpScreen> {
               MediaQuery.of(context).size.width != viewModel.maxWidth
             ) {
               viewModel.setScreenDimensions(
-                MediaQuery.of(context).size.height - appBar.preferredSize.height - MediaQuery.of(context).padding.top,
+                MediaQuery.of(context).size.height - appBar.preferredSize.height,
                 MediaQuery.of(context).size.width,
                 MediaQuery.of(context).textScaleFactor
               );
             }
               return Scaffold(
+                resizeToAvoidBottomInset : false,
                 appBar: appBar,
-                body: Container(
+                body: SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 50.0, right: 50),
+                    padding: const EdgeInsets.only(left: 50.0, right: 50, bottom: 10),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
                         const Text('Sign Up', textAlign: TextAlign.center, style: TextStyle(fontSize: 24),),
-                        const SizedBox(height: 50),
+                        SizedBox(height: viewModel.maxHeight * 0.05),
                         TextField(
                         decoration: InputDecoration(labelText: "Username", hintText: "Username"),
                         controller: usernameController,
                         ),
-                        const SizedBox(height: 50),
+                        SizedBox(height: viewModel.maxHeight * 0.05),
                         TextField(
                         decoration: InputDecoration(labelText: "Password", hintText: "Password"),
                         controller: passwordController,
                         obscureText: true,
                         ),
-                        SizedBox(height: 50),
+                        SizedBox(height: viewModel.maxHeight * 0.05),
                         TextField(
                         decoration: InputDecoration(labelText: "Confirm Password", hintText: "Confirm Password"),
                         controller: passwordController,
                         obscureText: true,
                         ),
-                        SizedBox(height: 50),
+                        SizedBox(height: viewModel.maxHeight * 0.05),
                         ElevatedButton(onPressed: () {_signUp(viewModel);}, child: Text("Sign Up")),
                       ],
                     ),
