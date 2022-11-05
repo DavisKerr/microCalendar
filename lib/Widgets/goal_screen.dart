@@ -13,32 +13,26 @@ import '../Widgets/add_goal_button.dart';
 
 class GoalScreen extends StatelessWidget {
   
-  final Function changeToCreateGoalScreen;
-  final Function changeToActivityLogScreen;
-  final double maxHeight;
-  final double maxWidth;
 
-  const GoalScreen({
-    required this.maxHeight,
-    required this.maxWidth,
-    required this.changeToCreateGoalScreen,
-    required this.changeToActivityLogScreen
-  });
+  const GoalScreen();
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          const Text('Goals', textAlign: TextAlign.center, style: TextStyle(fontSize: 24),),
-          StoreConnector<AppState, ViewModel>(
+    return StoreConnector<AppState, ViewModel>(
             converter: (Store<AppState> store) => ViewModel.create(store),
             builder: (BuildContext context, ViewModel viewModel) {
               Iterable<Goal> nonCompleteGoals = viewModel.goalList.where((goal) => !goal.complete);
-              return Container(
-                height: maxHeight * 0.85,
-                width: maxWidth * 0.9,
+        return Container(
+          height: viewModel.maxHeight,
+          width: viewModel.maxWidth,
+          padding: EdgeInsets.all(0),
+          margin: EdgeInsets.all(0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Container(
+                height: viewModel.maxHeight * 0.9,
+                width: viewModel.maxWidth,
                 child: ListView.builder(
                   itemCount: nonCompleteGoals.length + 1,
                   itemBuilder: (context, index) {
@@ -46,23 +40,20 @@ class GoalScreen extends StatelessWidget {
                     {
                       final item = nonCompleteGoals.elementAt(index);
                       return Container(
-                        //height: (maxHeight * 0.85) * 0.20,
                         child: GoalBox(
                           goal: item, 
-                          maxWidth: maxWidth, 
-                          maxHeight: maxHeight,
-                          viewActivityLog: changeToActivityLogScreen,
+                          viewActivityLog: viewModel.navigateToActivityLogScreen,
                         ),
                       );
                     }
-                    return AddGoalButton(changeToGoalScreen: changeToCreateGoalScreen);
+                    return AddGoalButton();
                   },
                 ),
-              );
-            },
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      }
     );
   }
 }

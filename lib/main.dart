@@ -104,14 +104,27 @@ class HomePage extends StatelessWidget {
       converter: (Store<AppState> store) => ViewModel.create(store),
       builder: (BuildContext context, ViewModel viewModel) {
         AppBar appBar = _buildAppBar(viewModel, context);
-        return Scaffold(
-          appBar: appBar,
-          body: GoalScreen(
-            maxHeight: MediaQuery.of(context).size.height - appBar.preferredSize.height,
-            maxWidth: MediaQuery.of(context).size.width,
-            changeToCreateGoalScreen: _changeToGoalCreateScreen,
-            changeToActivityLogScreen: _changeToGoalActivityLogScreen,
-          )
+
+        return OrientationBuilder(
+          builder: (context, orientation) {
+
+            // Detect change in dimensions, typically through orientation change. 
+            if(
+              MediaQuery.of(context).size.height - appBar.preferredSize.height != viewModel.maxHeight ||
+              MediaQuery.of(context).size.width != viewModel.maxWidth
+            ) {
+              viewModel.setScreenDimensions(
+                MediaQuery.of(context).size.height - appBar.preferredSize.height - MediaQuery.of(context).padding.top,
+                MediaQuery.of(context).size.width,
+                MediaQuery.of(context).textScaleFactor
+              );
+            }
+            
+            return Scaffold(
+              appBar: appBar,
+              body: GoalScreen()
+            );
+          }
         );
       }
     );

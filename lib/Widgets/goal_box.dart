@@ -22,12 +22,8 @@ class GoalBox extends StatelessWidget {
 
   final Goal goal;
   final Function viewActivityLog;
-  final double maxHeight;
-  final double maxWidth;
 
   GoalBox({required this.goal, 
-    required this.maxHeight,
-    required this.maxWidth,
     required this.viewActivityLog,  
   });
 
@@ -50,6 +46,7 @@ class GoalBox extends StatelessWidget {
        converter: (Store<AppState> store) => ViewModel.create(store),
         builder: (BuildContext context, ViewModel viewModel) {
           return Container(
+            width: viewModel.maxWidth * 0.75,
             height: 175,
             child: Card(
               margin: EdgeInsets.only(left: 20, bottom:20, top:20, right: 20),
@@ -59,9 +56,9 @@ class GoalBox extends StatelessWidget {
                 children: <Widget>[
                   Container(
                     height: 175,
-                    width: maxWidth * 0.75,
+                    width: viewModel.maxWidth * 0.65,
                     child: GestureDetector(
-                      onTap: () {startGoalTracker(context, goal, DateTime.now(),);},
+                      onTap: () {startGoalTracker(context, goal, DateTime.now());},
                       onLongPress: () {startGoalEditor(context, goal, viewModel);},
                       child: Card(
                         elevation: 0,
@@ -100,12 +97,10 @@ class GoalBox extends StatelessWidget {
                     ),
                   ),
                   Flexible(
+                    //width: viewModel.maxWidth * 0.25,
                     child: LargeGoalMenuButton(
-                      height: maxHeight, 
-                      width: maxWidth * 0.25,
                       goal: goal,
                       viewActivityLog: viewActivityLog,
-                      viewModel: viewModel,
                     )
                   ),
                 ],

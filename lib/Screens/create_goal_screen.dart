@@ -40,7 +40,6 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
   final TextEditingController quantityController = TextEditingController();
   final TextEditingController contextController = TextEditingController();
 
-  bool dont = false;
   String period = "Day";
   String startDate = "00/00/00";
   String endDate = "00/00/00";
@@ -62,13 +61,6 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
   {
     setState(() {
       endDate = '$date';
-    });
-  }
-
-  void _updateDontState(bool value)
-  {
-    setState(() {
-      dont = value;
     });
   }
 
@@ -170,113 +162,131 @@ class _CreateGoalScreenState extends State<CreateGoalScreen> {
     return StoreConnector<AppState, ViewModel>(
       converter: (Store<AppState> store) => ViewModel.create(store),
       builder: (BuildContext context, ViewModel viewModel) {
+
         this.viewModel = viewModel;
-        return Scaffold(
-          appBar: _buildAppBar(viewModel, context),
-          body: PageView(
-            controller: pageController,
-            physics: NeverScrollableScrollPhysics(),
-            children: <Widget>[
-              CreateGoalFormIntroduction(
-                pageNumber: 1, 
-                totalPages: 12, 
-                nextPage: _nextPage,
+        AppBar appBar =_buildAppBar(viewModel, context);
+
+          return OrientationBuilder(
+          builder: (context, orientation) {
+           if(
+              MediaQuery.of(context).size.height - appBar.preferredSize.height != viewModel.maxHeight ||
+              MediaQuery.of(context).size.width != viewModel.maxWidth
+            ) {
+              viewModel.setScreenDimensions(
+                MediaQuery.of(context).size.height - appBar.preferredSize.height - MediaQuery.of(context).padding.top,
+                MediaQuery.of(context).size.width,
+                MediaQuery.of(context).textScaleFactor
+              );
+            }
+            return Scaffold(
+              appBar: appBar,
+              body: Container(
+                width: viewModel.maxWidth,
+                height: viewModel.maxHeight,
+                child: PageView(
+                  controller: pageController,
+                  physics: NeverScrollableScrollPhysics(),
+                  children: <Widget>[
+                    CreateGoalFormIntroduction(
+                      pageNumber: 1, 
+                      totalPages: 12, 
+                      nextPage: _nextPage,
+                    ),
+                    CreateGoalFormExample(
+                      totalPages: 12, 
+                      pageNumber: 2, 
+                      nextPage: _nextPage,
+                      previousPage: _previousPage,
+                    ),
+                    CreateGoalFormName(
+                      totalPages: 12, 
+                      pageNumber: 3, 
+                      nextPage: _nextPage, 
+                      previousPage: _previousPage, 
+                      nameController: nameController
+                    ),
+                    CreateGoalFormVerb(
+                      totalPages: 12, 
+                      pageNumber: 4, 
+                      nextPage: _nextPage, 
+                      previousPage: _previousPage,
+                      verbController: verbController,
+                    ),
+                    CreateGoalFormMeasurement(
+                      totalPages: 12, 
+                      pageNumber: 5,
+                      nextPage: _nextPage, 
+                      previousPage: _previousPage, 
+                      measurmentController: measurementController
+                    ),
+                    CreateGoalFormQuantity(
+                      totalPages: 12, 
+                      pageNumber: 6, 
+                      nextPage: _nextPage, 
+                      previousPage: _previousPage, 
+                      quantityController: quantityController),
+                    CreateGoalFormMidwayCheck(
+                      totalPages: 12, 
+                      pageNumber: 7, 
+                      nextPage: _nextPage, 
+                      previousPage: _previousPage, 
+                      verbController: verbController, 
+                      measurementController: measurementController, 
+                      quantityController: quantityController),
+                    CreateGoalFormPeriod(
+                      totalPages: 12, 
+                      pageNumber: 8, 
+                      nextPage: _nextPage, 
+                      updateChosenFunction: _updatePeriodState, 
+                      previousPage: _previousPage, 
+                      chosen: period,
+                    ),
+                    CreateGoalFormContext(
+                      totalPages: 12, 
+                      pageNumber: 9, 
+                      nextPage: _nextPage, 
+                      previousPage: _previousPage, 
+                      contextController: contextController),
+                    CreateGoalFormDates(
+                      totalPages: 12, 
+                      pageNumber: 10, 
+                      nextPage: _nextPage, 
+                      previousPage: _previousPage, 
+                      updateStartDate: _updateStartDate, 
+                      updateEndDate: _updateEndDate, 
+                      startDate: startDate,
+                      endDate: endDate,
+                    ),
+                    CreateGoalFormNotifications(
+                      totalPages: 12, 
+                      pageNumber: 11, 
+                      nextPage: _nextPage, 
+                      previousPage: _previousPage,
+                      updateEnableNotifications: _updateEnableNotificationsState,
+                      updateNotificationTime: _updateNotificationTimeState,
+                      updateNotificationPeriod: _updateNotificationPeriodState,
+                      includeNotifications: enableNotifications,
+                      notificationTime: notificationTime,
+                      chosenPeriod: notificationPeriod == 0 ? "Day" : "Week",
+                    ),
+                    CreateGoalFormEnd(
+                      totalPages: 12, 
+                      pageNumber: 12, 
+                      previousPage: _previousPage, 
+                      submitGoal: _submitGoal, 
+                      name: nameController,
+                      verb: verbController, 
+                      measurement: measurementController, 
+                      quantity: quantityController, 
+                      period: period, 
+                      startDate: startDate, 
+                      endDate: endDate,
+                    ),
+                  ],
+                ),
               ),
-              CreateGoalFormExample(
-                totalPages: 12, 
-                pageNumber: 2, 
-                nextPage: _nextPage,
-                previousPage: _previousPage,
-              ),
-              CreateGoalFormName(
-                totalPages: 12, 
-                pageNumber: 3, 
-                nextPage: _nextPage, 
-                previousPage: _previousPage, 
-                nameController: nameController
-              ),
-              CreateGoalFormVerb(
-                totalPages: 12, 
-                pageNumber: 4, 
-                nextPage: _nextPage, 
-                previousPage: _previousPage,
-                dont: dont,
-                updateDontFunction: _updateDontState,
-                verbController: verbController,
-              ),
-              CreateGoalFormMeasurement(
-                totalPages: 12, 
-                pageNumber: 5,
-                nextPage: _nextPage, 
-                previousPage: _previousPage, 
-                measurmentController: measurementController
-              ),
-              CreateGoalFormQuantity(
-                totalPages: 12, 
-                pageNumber: 6, 
-                nextPage: _nextPage, 
-                previousPage: _previousPage, 
-                quantityController: quantityController),
-              CreateGoalFormMidwayCheck(
-                totalPages: 12, 
-                pageNumber: 7, 
-                nextPage: _nextPage, 
-                previousPage: _previousPage, 
-                verbController: verbController, 
-                measurementController: measurementController, 
-                quantityController: quantityController),
-              CreateGoalFormPeriod(
-                totalPages: 12, 
-                pageNumber: 8, 
-                nextPage: _nextPage, 
-                updateChosenFunction: _updatePeriodState, 
-                previousPage: _previousPage, 
-                chosen: period,
-              ),
-              CreateGoalFormContext(
-                totalPages: 12, 
-                pageNumber: 9, 
-                nextPage: _nextPage, 
-                previousPage: _previousPage, 
-                contextController: contextController),
-              CreateGoalFormDates(
-                totalPages: 12, 
-                pageNumber: 10, 
-                nextPage: _nextPage, 
-                previousPage: _previousPage, 
-                updateStartDate: _updateStartDate, 
-                updateEndDate: _updateEndDate, 
-                startDate: startDate,
-                endDate: endDate,
-              ),
-              CreateGoalFormNotifications(
-                totalPages: 12, 
-                pageNumber: 11, 
-                nextPage: _nextPage, 
-                previousPage: _previousPage,
-                updateEnableNotifications: _updateEnableNotificationsState,
-                updateNotificationTime: _updateNotificationTimeState,
-                updateNotificationPeriod: _updateNotificationPeriodState,
-                includeNotifications: enableNotifications,
-                notificationTime: notificationTime,
-                chosenPeriod: notificationPeriod == 0 ? "Day" : "Week",
-              ),
-              CreateGoalFormEnd(
-                totalPages: 12, 
-                pageNumber: 12, 
-                previousPage: _previousPage, 
-                submitGoal: _submitGoal, 
-                name: nameController,
-                verb: verbController, 
-                measurement: measurementController, 
-                quantity: quantityController, 
-                period: period, 
-                dont: dont, 
-                startDate: startDate, 
-                endDate: endDate,
-              ),
-            ],
-          ),
+            );
+          }
         );
       }
     );

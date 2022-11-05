@@ -3,6 +3,12 @@ import 'package:micro_calendar/Widgets/back_and_next_buttons.dart';
 import 'package:micro_calendar/Widgets/screen_tracker_indicators.dart';
 
 import '../../Styles/app_themes.dart' as appStyle;
+import 'create_goal_footer.dart';
+
+import '../../View/view_model.dart';
+import '../../State/app_state.dart';
+import 'package:redux/redux.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 
 class CreateGoalFormName extends StatefulWidget {
   final int totalPages;
@@ -28,30 +34,50 @@ class _CreateGoalFormNameState extends State<CreateGoalFormName> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(left: 10, right: 10, top: 25, bottom: 20),
-      child: Column(
-        children: <Widget> [
-          Text(
-            '''We can start by giving your goal a name!''',
-            style: Theme.of(context).textTheme.titleMedium,
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: 50),
-          Container(
-            width: 250,
-            height: 90,
-            child: TextField(
-              keyboardType: TextInputType.text,
-              decoration: InputDecoration(labelText: "Name", hintText: "Name"),
-              controller: widget.nameController,
-            ),
-          ),
-          SizedBox(height: 50),
-          BackAndNextButtons(onBackClicked: widget.previousPage, onNextClicked: widget.nextPage),
-          ScreenTrackerIndicators(numPages: widget.totalPages, currentPage: widget.pageNumber),
-        ]
-      )
+    return StoreConnector<AppState, ViewModel>(
+      converter: (Store<AppState> store) => ViewModel.create(store),
+      builder: (BuildContext context, ViewModel viewModel) {
+        return Container(
+          height: viewModel.maxHeight,
+          width: viewModel.maxWidth,
+          padding: EdgeInsets.only(left: 10, right: 10, top: 7, bottom: 7),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget> [
+              Container(
+                height: viewModel.maxHeight * 0.5,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      '''We can start by giving your goal a name!''',
+                      style: Theme.of(context).textTheme.titleMedium,
+                      textAlign: TextAlign.center,
+                      textScaleFactor: viewModel.maxWidth > 400 && viewModel.maxHeight > 400 ? 1 : .75,
+                    ),
+                    Container(
+                      width: viewModel.maxWidth * 0.6 - 45,
+                      child: TextField(
+                        keyboardType: TextInputType.text,
+                        decoration: InputDecoration(labelText: "Name", hintText: "Name", floatingLabelBehavior: FloatingLabelBehavior.never,),
+                        controller: widget.nameController,
+                        style: TextStyle(fontSize: 24 * (viewModel.maxWidth > 400 && viewModel.maxHeight > 400 ? 1 : .75)),
+                        ),
+                    ),
+                  ],
+                ),
+              ),  
+              CreateGoalFooter(
+                totalPages: widget.totalPages, 
+                currentPage: widget.pageNumber, 
+                onBackClicked: widget.previousPage, 
+                onNextClicked: widget.nextPage, 
+                backText: "Back", 
+                nextText: "Next")
+            ]
+          )
+        );
+      }
     );
   }
 }

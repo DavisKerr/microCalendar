@@ -8,22 +8,17 @@ import 'package:flutter_redux/flutter_redux.dart';
 
 import '../Actions/goal_actions.dart';
 import '../Model/goal.dart';
+import '../State/app_state.dart';
 
 class LargeCompletedGoalMenuButton extends StatelessWidget {
   
-  final double height;
-  final double width;
   final Goal goal;
-  final ViewModel viewModel;
 
   const LargeCompletedGoalMenuButton({
-    required this.height, 
-    required this.width, 
     required this.goal,
-    required this.viewModel
   });
 
-  _unmarkGoalComplete(BuildContext context)
+  _unmarkGoalComplete(BuildContext context, ViewModel viewModel)
   {
     Goal newGoal = Goal(
       goalName: goal.goalName, 
@@ -42,71 +37,76 @@ class LargeCompletedGoalMenuButton extends StatelessWidget {
     viewModel.unCompleteGoal(newGoal);
   }
 
-  _openActivityLog(BuildContext context)
+  _openActivityLog(BuildContext context, ViewModel viewModel)
   {
     viewModel.navigateToActivityLogScreen(goal);
   }
 
-  _openDeleteGoalConfirmationWindow(BuildContext context)
+  _openDeleteGoalConfirmationWindow(BuildContext context, ViewModel viewModel)
   {
-    startConfirmationWindow(context, goal, _deleteGoal);
+    startConfirmationWindow(context, goal, () {_deleteGoal(viewModel);});
   }
 
-  void _deleteGoal() {
+  void _deleteGoal(ViewModel viewModel) {
     viewModel.deleteGoal(goal);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.all(0),
-      color: Color.fromARGB(100, 236, 234, 231),
-      elevation: 0,
-      child: SizedBox(
-        height: height,
-        width: width,
-        child: PopupMenuButton(
-          
-          color: Color.fromARGB(255, 255, 255, 255),
-          iconSize: 30,
-          icon: const Icon(Icons.more_vert),
-          itemBuilder: (BuildContext context) => <PopupMenuEntry>[
-            const PopupMenuItem(
-              value: 0,
-              child: ListTile(
-                leading: Icon(Icons.check_box),
-                title: Text('Mark Goal Not Complete'),
-              ),
-            ),
-            const PopupMenuItem(
-              value: 1,
-              child: ListTile(
-                leading: Icon(Icons.view_agenda),
-                title: Text('Activity Log'),
-              ),
-            ),
-            const PopupMenuItem(
-              value: 2,
-              child: ListTile(
-                leading: Icon(Icons.delete),
-                title: Text('Delete'),
-              ),
-            ),
-          ],
+    return StoreConnector<AppState, ViewModel>(
+      converter: (Store<AppState> store) => ViewModel.create(store),
+      builder: (BuildContext context, ViewModel viewModel) {
+        return Card(
+          margin: EdgeInsets.all(0),
+          color: Color.fromARGB(100, 236, 234, 231),
+          elevation: 0,
+          child: SizedBox(
+            height: viewModel.maxHeight,
+            width: viewModel.maxWidth,
+            child: PopupMenuButton(
+              
+              color: Color.fromARGB(255, 255, 255, 255),
+              iconSize: 30,
+              icon: const Icon(Icons.more_vert),
+              itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+                const PopupMenuItem(
+                  value: 0,
+                  child: ListTile(
+                    leading: Icon(Icons.check_box),
+                    title: Text('Mark Goal Not Complete'),
+                  ),
+                ),
+                const PopupMenuItem(
+                  value: 1,
+                  child: ListTile(
+                    leading: Icon(Icons.view_agenda),
+                    title: Text('Activity Log'),
+                  ),
+                ),
+                const PopupMenuItem(
+                  value: 2,
+                  child: ListTile(
+                    leading: Icon(Icons.delete),
+                    title: Text('Delete'),
+                  ),
+                ),
+              ],
 
-          onSelected: (value) {
-            if(value == 0) {
-              _unmarkGoalComplete(context);
-            }
-            else if(value == 1) {
-              _openActivityLog(context);
-            }
-            else {
-              _openDeleteGoalConfirmationWindow(context);
-            }
-          },
-        ),
-      ),
+              onSelected: (value) {
+                if(value == 0) {
+                  _unmarkGoalComplete(context, viewModel);
+                }
+                else if(value == 1) {
+                  _openActivityLog(context, viewModel);
+                }
+                else {
+                  _openDeleteGoalConfirmationWindow(context, viewModel);
+                }
+              },
+            ),
+          ),
+        );
+      }
     );
   }
 }

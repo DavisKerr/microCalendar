@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:micro_calendar/Actions/account_actions.dart';
 import 'package:micro_calendar/Actions/db_actions.dart';
 import 'package:micro_calendar/Actions/navigation_actions.dart';
@@ -16,6 +17,9 @@ class ViewModel{
   bool signedIn;
   String username;
   bool initLoading;
+  double maxHeight;
+  double maxWidth;
+  double textScaleFactor;
 
   final Function (Goal newGoal) updateGoal;
   final Function (Goal toDelete) deleteGoal;
@@ -38,6 +42,7 @@ class ViewModel{
   final Function (GoalNotification notification) insertGoalNotification;
   final Function (GoalNotification notification) deleteGoalNotification;
   final Function (int goalId) loadGoalNotification;
+  final Function (double height, double width, double textScaleFactor) setScreenDimensions;
 
 
   ViewModel(
@@ -47,6 +52,9 @@ class ViewModel{
     this.signedIn,
     this.username,
     this.initLoading,
+    this.maxHeight,
+    this.maxWidth,
+    this.textScaleFactor,
     this.updateGoal,
     this.deleteGoal,
     this.completeGoal,
@@ -68,6 +76,7 @@ class ViewModel{
     this.insertGoalNotification,
     this.deleteGoalNotification,
     this.loadGoalNotification,
+    this.setScreenDimensions,
   );
  
   factory ViewModel.create(Store<AppState> store){
@@ -106,7 +115,6 @@ class ViewModel{
     _createProgress(Goal goal, GoalProgress newProgress) {
       store.dispatch(
         InsertGoalProgressAttemptAction(goal, newProgress)
-      //AddGoalProgressAction(goal, newProgress)
       );
     }
 
@@ -178,6 +186,12 @@ class ViewModel{
     _unCompleteGoal(Goal goal) {
       store.dispatch(UnCompleteGoalAttemptAction(goal));
     }
+
+    _setScreenDimensions(double height, double width, double textScaleFactor) {
+      print("Setting Dimensions");
+
+      store.dispatch(SetScreenDimensions(height, width, textScaleFactor));
+    }
   
     return ViewModel(
       store.state.goalList,
@@ -186,6 +200,9 @@ class ViewModel{
       store.state.signedIn,
       store.state.username,
       store.state.initLoading,
+      store.state.maxHeight,
+      store.state.maxWidth,
+      store.state.textScaleFactor,
       _updateGoal, 
       _deleteGoal,
       _completeGoal,
@@ -207,6 +224,7 @@ class ViewModel{
       _insertGoalNotification,
       _deleteGoalNotification,
       _loadGoalNotification,
+      _setScreenDimensions,
     );
   }
 }

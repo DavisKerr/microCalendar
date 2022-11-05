@@ -13,7 +13,7 @@ class BackAndNextButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -24,7 +24,7 @@ class BackAndNextButtons extends StatelessWidget {
             child: Row(
               children: [
                 Icon(Icons.keyboard_arrow_left_sharp, color: Color.fromARGB(255, 0, 0, 0)),
-                Text(backText, style: Theme.of(context).textTheme.titleMedium),
+                Text(backText, style: Theme.of(context).textTheme.titleMedium,),
               ],
             ),
           ),

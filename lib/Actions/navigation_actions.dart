@@ -38,3 +38,11 @@ class NavigateToSignUpScreenAction extends NavigationAction {
 class NavigateToCompletedGoalScreenAction extends NavigationAction {
   const NavigateToCompletedGoalScreenAction();
 }
+
+@immutable 
+class SetScreenDimensions extends NavigationAction {
+  final double maxHeight;
+  final double maxWidth;
+  final double textScaleFactor;
+  const SetScreenDimensions(this.maxHeight, this.maxWidth, this.textScaleFactor);
+}

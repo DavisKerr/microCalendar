@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:micro_calendar/Actions/account_actions.dart';
 import 'package:micro_calendar/Actions/db_actions.dart';
+import 'package:micro_calendar/Actions/navigation_actions.dart';
 import 'package:micro_calendar/Model/goal_notification.dart';
 import 'package:time_machine/time_machine.dart';
 
@@ -383,6 +384,36 @@ GoalNotification modifyNotificationReducer(GoalNotification notification, Action
   }
 }
 
+double setHeight(double oldHeight,Action action) {
+  if(action is SetScreenDimensions)
+  {
+    return action.maxHeight;
+  }
+  else {
+    return oldHeight;
+  }
+}
+
+double setWidth(double oldWidth,Action action) {
+  if(action is SetScreenDimensions)
+  {
+    return action.maxWidth;
+  }
+  else {
+    return oldWidth;
+  }
+}
+
+double setTextScaleFactor(double oldTextScaleFactor,Action action) {
+  if(action is SetScreenDimensions)
+  {
+    return action.textScaleFactor;
+  }
+  else {
+    return oldTextScaleFactor;
+  }
+}
+
 AppState appStateReducer(
   AppState oldAppState,
   action
@@ -392,6 +423,9 @@ AppState appStateReducer(
   signedIn: modifySignInReducer(oldAppState.signedIn, action),
   username: modifyUsernameReducer(oldAppState.username, action),
   initLoading: modifyinitLoadingReducer(oldAppState.initLoading, action),
-  notification: modifyNotificationReducer(oldAppState.notification, action)
+  notification: modifyNotificationReducer(oldAppState.notification, action),
+  maxHeight: setHeight(oldAppState.maxHeight, action),
+  maxWidth: setWidth(oldAppState.maxWidth, action),
+  textScaleFactor: setTextScaleFactor(oldAppState.textScaleFactor, action),
 );
 

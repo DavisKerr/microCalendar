@@ -16,6 +16,9 @@ class AppState {
   final bool signedIn;
   final String username;
   final bool initLoading;
+  final double maxHeight;
+  final double maxWidth;
+  final double textScaleFactor;
 
   const AppState({
     required this.goalList,
@@ -24,10 +27,21 @@ class AppState {
     this.username = "",
     this.initLoading = false,
     this.notification = const GoalNotification.empty(),
+    this.maxHeight = 0,
+    this.maxWidth = 0,
+    this.textScaleFactor = 0,
   });
 
   const AppState.empty() 
-    : goalList =  const <Goal>[], nextGoalId = 0, signedIn = false, username = '', initLoading = false, notification = const GoalNotification.empty();
+    : goalList =  const <Goal>[], 
+    nextGoalId = 0, 
+    signedIn = false, 
+    username = '', 
+    initLoading = false, 
+    notification = const GoalNotification.empty(),
+    maxHeight = 0,
+    maxWidth = 0,
+    textScaleFactor = 0;
 
   const AppState.test()
     : goalList = const <Goal>[
@@ -58,6 +72,8 @@ class AppState {
     signedIn = false,
     username = "",
     initLoading = false,
-    notification = const GoalNotification.empty();
-    
+    notification = const GoalNotification.empty(),
+    maxHeight = 0,
+    maxWidth = 0,
+    textScaleFactor = 0;    
 }

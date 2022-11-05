@@ -6,13 +6,13 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
 import 'package:redux/redux.dart';
 
-import '../Actions/goal_actions.dart';
-import '../Model/goal.dart';
-import '../Model/goal_progress.dart';
-import '../SpawnPopups/spawn_popups.dart';
-import '../State/app_state.dart';
-import '../View/view_model.dart';
-import 'confirmation_window.dart';
+import '../../Actions/goal_actions.dart';
+import '../../Model/goal.dart';
+import '../../Model/goal_progress.dart';
+import '../../SpawnPopups/spawn_popups.dart';
+import '../../State/app_state.dart';
+import '../../View/view_model.dart';
+import '../confirmation_window.dart';
 
 class ProgressBox extends StatelessWidget {
   final GoalProgress progress;
