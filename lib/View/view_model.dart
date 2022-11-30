@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:micro_calendar/Actions/account_actions.dart';
+import 'package:micro_calendar/Actions/api_actions.dart';
 import 'package:micro_calendar/Actions/db_actions.dart';
+import 'package:micro_calendar/Actions/event_response_actions.dart';
 import 'package:micro_calendar/Actions/navigation_actions.dart';
 import 'package:micro_calendar/Model/goal.dart';
 import 'package:micro_calendar/Model/goal_notification.dart';
@@ -20,6 +22,14 @@ class ViewModel{
   double maxHeight;
   double maxWidth;
   double textScaleFactor;
+  String token;
+  bool signInErrors;
+  String signInErrorMessage;
+  bool loading;
+  bool showToast;
+  String toastMessage;
+  bool registerErrors;
+  String registerErrorMessage;
 
   final Function (Goal newGoal) updateGoal;
   final Function (Goal toDelete) deleteGoal;
@@ -43,6 +53,10 @@ class ViewModel{
   final Function (GoalNotification notification) deleteGoalNotification;
   final Function (int goalId) loadGoalNotification;
   final Function (double height, double width, double textScaleFactor) setScreenDimensions;
+  final Function () logout;
+  final Function (String username, String password) register;
+  final Function () hideToast;
+  final Function (String token) sync;
 
 
   ViewModel(
@@ -55,6 +69,14 @@ class ViewModel{
     this.maxHeight,
     this.maxWidth,
     this.textScaleFactor,
+    this.token,
+    this.signInErrors,
+    this.signInErrorMessage,
+    this.loading,
+    this.showToast,
+    this.toastMessage,
+    this.registerErrors,
+    this.registerErrorMessage,
     this.updateGoal,
     this.deleteGoal,
     this.completeGoal,
@@ -77,6 +99,10 @@ class ViewModel{
     this.deleteGoalNotification,
     this.loadGoalNotification,
     this.setScreenDimensions,
+    this.logout,
+    this.register,
+    this.hideToast,
+    this.sync,
   );
  
   factory ViewModel.create(Store<AppState> store){
@@ -93,7 +119,7 @@ class ViewModel{
     }
 
     _createGoal(Goal newGoal) {
-      store.dispatch(InsertGoalAttemptAction(newGoal));
+      store.dispatch(InsertGoalAttemptAction(newGoal, ""));
     }
 
     _createGoalWithNotification(Goal newGoal, GoalNotification newNotification) {
@@ -114,7 +140,7 @@ class ViewModel{
 
     _createProgress(Goal goal, GoalProgress newProgress) {
       store.dispatch(
-        InsertGoalProgressAttemptAction(goal, newProgress)
+        InsertGoalProgressAttemptAction(goal.goalId, newProgress, "")
       );
     }
 
@@ -192,6 +218,22 @@ class ViewModel{
 
       store.dispatch(SetScreenDimensions(height, width, textScaleFactor));
     }
+
+    _logout() {
+      store.dispatch(SignOutAccountAction());
+    }
+
+    _register(String username, String password) {
+      store.dispatch(RegisterAttemptAccountAction(username, password));
+    }
+
+    _hideToast() {
+      store.dispatch(HideToastAction());
+    }
+
+    _sync(String token) {
+      store.dispatch(SyncApiAttemptAction(token));
+    }
   
     return ViewModel(
       store.state.goalList,
@@ -203,6 +245,14 @@ class ViewModel{
       store.state.maxHeight,
       store.state.maxWidth,
       store.state.textScaleFactor,
+      store.state.token,
+      store.state.signInErrors,
+      store.state.signInErrorMessage,
+      store.state.loading,
+      store.state.showToast,
+      store.state.toastMessage,
+      store.state.registerErrors,
+      store.state.registerErrorMessage,
       _updateGoal, 
       _deleteGoal,
       _completeGoal,
@@ -225,6 +275,10 @@ class ViewModel{
       _deleteGoalNotification,
       _loadGoalNotification,
       _setScreenDimensions,
+      _logout,
+      _register,
+      _hideToast,
+      _sync,
     );
   }
 }

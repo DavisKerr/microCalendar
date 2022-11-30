@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:micro_calendar/Actions/goal_actions.dart';
 import 'package:micro_calendar/Database/db_helper.dart';
 import 'package:micro_calendar/Middleware/notification_middleware.dart';
@@ -42,8 +44,8 @@ Future<List<Goal>> loadGoals() async
   }).toList());
 }
 
-Future<int> insertProgress(int goalId, GoalProgress progress) {
-  return DBHelper.insertProgress(progress.progress, progress.dateString, goalId);
+Future<int> insertProgress(int goalId, GoalProgress progress, String progressUuid) {
+  return DBHelper.insertProgress(progress.progress, progress.dateString, goalId, progressUuid);
 }
 
 Future<int> deleteProgressById(int progressId) {
@@ -56,8 +58,8 @@ Future<int> updateProgress(double units, String dateString, int progressId) {
 
 Future<int> insertGoal(String name, String verb, String units,
   double quantity, PeriodUnit period, 
-  String start, String end) {
-    return DBHelper.insertGoal(name, verb, units, quantity, period, start, end);
+  String start, String end, String goalUuid) {
+    return DBHelper.insertGoal(name, verb, units, quantity, period, start, end, goalUuid);
 }
 
 Future<int> updateGoal(String name, String verb, String units,
@@ -98,7 +100,7 @@ void dbMiddleware(
   }
   else if(action is InsertGoalProgressAttemptAction)
   {
-    insertProgress(action.goal.goalId, action.progress).then((id) => store.dispatch(InsertGoalProgressSuccessAction(action.goal.goalId, action.progress, id)));
+    insertProgress(action.goalId, action.progress, action.progressUuid).then((id) => store.dispatch(InsertGoalProgressSuccessAction(action.goalId, action.progress, id)));
   }
   else if(action is DeleteGoalProgressAttemptAction)
   {
@@ -110,7 +112,7 @@ void dbMiddleware(
       (val) => store.dispatch(UpdateGoalProgressSuccessAction(action.newProgress))
     );
   }
-  else if( action is InsertGoalAttemptAction)
+  else if(action is InsertGoalAttemptAction)
   {
     insertGoal(
       action.goal.goalName, 
@@ -120,6 +122,7 @@ void dbMiddleware(
       action.goal.goalPeriod,
       action.goal.goalStartDate,
       action.goal.goalEndDate,
+      action.goalUuid
       ).then((id) => store.dispatch(InsertGoalSuccessAction(id, action.goal)));
   }
   else if(action is DeleteGoalAttemptAction) {
@@ -236,6 +239,7 @@ void dbMiddleware(
       action.goal.goalPeriod,
       action.goal.goalStartDate,
       action.goal.goalEndDate,
+      ""
       ).then((id) {
         store.dispatch(InsertGoalSuccessAction(id, action.goal));
         GoalNotification newGoalNotification = GoalNotification(
@@ -288,6 +292,48 @@ void dbMiddleware(
     deleteGoalNotification(action.notification.goalId).then((rows) => 
       notificationService.cancelNotifications(action.notification.notificationId));
   }
+  else if(action is InsertDataFromJSONAction) {
+    loadDataFromJson(action.json, store);
+  }
 
   next(action);
+}
+
+void loadDataFromJson(List<dynamic> json, Store<AppState> store) async {
+Queue<Map<String, dynamic>> progressToAdd = Queue<Map<String, dynamic>>();
+    
+    json.forEach((element) { 
+      print("\n");
+      print(element);
+      print("\n");
+      if(element["goalUuid"] != null) {
+        progressToAdd.add(element);
+      }
+      else {
+        Goal newGoal = Goal(
+          goalName: element["name"], 
+          goalVerb: element["verb"], 
+          goalQuantity: element["quantity"], 
+          goalUnits: element["measurement"], 
+          goalPeriod: element["period"] == 1 ? PeriodUnit.day : element["period"] == 2 ? PeriodUnit.week : PeriodUnit.month,
+          goalStartDate: element["startDate"], 
+          goalEndDate: element["endDate"], 
+          goalId: -1, 
+          progressPercentage: 0);
+          store.dispatch(InsertGoalAttemptAction(newGoal, element["uuid"]));
+      }
+    });
+
+    while(progressToAdd.isNotEmpty) {
+      Map<String, dynamic> event = progressToAdd.removeFirst();
+      List<Map<String, dynamic>> goal = await DBHelper.getGoalIdByUUID(event["goalUuid"]);
+      int goalId = goal.first["goal_id"];
+      GoalProgress goalProgress = GoalProgress(
+        progress: event["units"], 
+        dateString: event["dateString"], 
+        id: -1, 
+        goalId: goalId
+      );
+      store.dispatch(InsertGoalProgressAttemptAction(goalId, goalProgress, event["uuid"]));
+    }
 }

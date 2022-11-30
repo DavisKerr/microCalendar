@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:micro_calendar/Actions/account_actions.dart';
 import 'package:micro_calendar/Actions/db_actions.dart';
+import 'package:micro_calendar/Actions/event_response_actions.dart';
 import 'package:micro_calendar/Actions/navigation_actions.dart';
 import 'package:micro_calendar/Model/goal_notification.dart';
 import 'package:time_machine/time_machine.dart';
@@ -87,6 +88,12 @@ int getNextPeriod(DateTime start, DateTime event, PeriodUnit period)
 
 double calculateNewProgress(Iterable<GoalProgress> progress, Goal goal)
 {
+  if(progress.isEmpty) {
+    return 0;
+  }
+  else if(goal.goalQuantity <= 0) {
+    return 100;
+  }
   DateTime start = Flutter.DateUtils.dateOnly(DateTime.parse(goal.goalStartDate));
   DateTime end = Flutter.DateUtils.dateOnly(DateTime.parse(goal.goalEndDate));
   int numPeriods = getNumCompletePeriods(start, end, goal.goalPeriod);
@@ -343,6 +350,9 @@ bool modifySignInReducer(bool oldAppState, Action action)
   {
      return true;
   }
+  else if(action is SignOutAccountAction) {
+    return false;
+  }
   else {
     return oldAppState;
   }
@@ -368,6 +378,9 @@ String modifyUsernameReducer(String username, Action action)
 {
   if(action is SignInSuccessAccountAction) {
     return action.username;
+  }
+  else if(action is SignOutAccountAction) {
+    return "";
   }
   else {
     return username;
@@ -414,6 +427,109 @@ double setTextScaleFactor(double oldTextScaleFactor,Action action) {
   }
 }
 
+String modifyTokenReducer(String oldToken, Action action) {
+  if(action is SignInSuccessAccountAction) {
+    return action.token;
+  }
+  else if(action is SignInFailAccountAction) {
+    return "";
+  }
+  else if(action is SignOutAccountAction) {
+    return "";
+  }
+  else {
+    return oldToken;
+  }
+  
+}
+
+bool modifySignInErrors(bool signInErrors, action) {
+  if(action is SignInFailAccountAction) {
+    return true;
+  }
+  else if(action is SignInSuccessAccountAction) {
+    return false;
+  }
+  else {
+    return signInErrors;
+  }
+}
+
+String modifySignInErrorMessage(String signInErrorMessage, Action action) {
+  if(action is SignInSuccessAccountAction) {
+    return "";
+  }
+  else if(action is SignInFailAccountAction) {
+    return "Incorrect username or password";
+  }
+  else {
+    return signInErrorMessage;
+  }
+}
+
+bool modifyLoadingReducer(bool oldLoading, Action action) {
+  if(action is SignInAttemptAccountAction || action is RegisterAttemptAccountAction) {
+    return true;
+  }
+  else if(action is SignInSuccessAccountAction || action is RegisterSuccessAccountAction) {
+    return false;
+  }
+  else if(action is SignInFailAccountAction || action is RegisterFailAccountAction) {
+    return false;
+  }
+  else {
+    return oldLoading;
+  }
+}
+
+bool modifyShowToastReducer(bool oldShowToast, Action action) {
+  if(action is ShowToastAction) {
+    return true;
+  }
+  else if(action is HideToastAction) {
+    return false;
+  }
+  else {
+    return oldShowToast;
+  }
+}
+
+String modifyToastMessageReducer(String oldToastMessage, Action action) {
+  if(action is ShowToastAction) {
+    return action.message;
+  }
+  else if(action is HideToastAction) {
+    return "";
+  }
+  else {
+    return oldToastMessage;
+  }
+}
+
+bool modifyRegisterErrors(bool registerErrors, Action action) {
+  if(action is RegisterFailAccountAction) {
+    return true;
+  }
+  else if(action is RegisterSuccessAccountAction) {
+    return false;
+  }
+  else {
+    return registerErrors;
+  }
+}
+
+String modifyRegisterErrorMessage(String registerErrorMessage, action) {
+  if(action is RegisterFailAccountAction) {
+    return action.errorMessage;
+  }
+  else if(action is RegisterSuccessAccountAction) {
+    return "";
+  }
+  else {
+    return registerErrorMessage;
+  }
+}
+
 AppState appStateReducer(
   AppState oldAppState,
   action
@@ -427,5 +543,29 @@ AppState appStateReducer(
   maxHeight: setHeight(oldAppState.maxHeight, action),
   maxWidth: setWidth(oldAppState.maxWidth, action),
   textScaleFactor: setTextScaleFactor(oldAppState.textScaleFactor, action),
+  token: modifyTokenReducer(oldAppState.token, action),
+  signInErrors: modifySignInErrors(oldAppState.signInErrors, action),
+  signInErrorMessage: modifySignInErrorMessage(oldAppState.signInErrorMessage, action),
+  loading: modifyLoadingReducer(oldAppState.loading, action),
+  showToast: modifyShowToastReducer(oldAppState.showToast, action),
+  toastMessage: modifyToastMessageReducer(oldAppState.toastMessage, action),
+  registerErrors: modifyRegisterErrors(oldAppState.registerErrors, action), 
+  registerErrorMessage: modifyRegisterErrorMessage(oldAppState.registerErrorMessage, action)
 );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

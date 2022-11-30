@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:micro_calendar/Model/goal_progress.dart';
 import 'package:micro_calendar/Widgets/ActivityLogWidgets/progress_box.dart';
+import 'package:micro_calendar/Widgets/loading_indicator.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
 
 import '../Model/goal.dart';
 import '../State/app_state.dart';
 import '../View/view_model.dart';
+import '../../Styles/app_themes.dart' as appStyle;
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -32,12 +37,38 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
+  void showLoadingIndicator(bool loading, BuildContext context) {
+    if(loading) {
+      showDialog(
+        context: context, 
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+        return LoadingIndicator(message: "Please wait...",);}
+      );
+    }
+  }
+
+  void showToast(bool makeToast, String message) {
+    if(makeToast)
+    {
+      Fluttertoast.showToast(msg: message);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
 
 
     return StoreConnector<AppState, ViewModel>(
         converter: (Store<AppState> store) => ViewModel.create(store),
+        onDidChange: (previousViewModel, viewModel) 
+          {
+            showLoadingIndicator(viewModel.loading, context);
+            showToast(viewModel.showToast, viewModel.toastMessage);
+            if(viewModel.showToast) {
+              viewModel.hideToast();
+            }
+          },
         builder: (BuildContext context, ViewModel viewModel) {
           AppBar appBar =_buildAppBar(viewModel, context);
 
@@ -64,6 +95,15 @@ class _SignInScreenState extends State<SignInScreen> {
                       children: <Widget>[
                         const Text('Sign In', textAlign: TextAlign.center, style: TextStyle(fontSize: 24),),
                         SizedBox(height: viewModel.maxHeight * 0.05),
+                        viewModel.signInErrors ? 
+                          Text(
+                            viewModel.signInErrorMessage,
+                            style: appStyle.AppThemes.errorText,
+                            textAlign: TextAlign.center,
+                            textScaleFactor: viewModel.maxWidth > 400 && viewModel.maxHeight > 400 ? 1 : .75,
+                          )
+                        :
+                          SizedBox(height: 12,),
                         TextField(
                         decoration: InputDecoration(labelText: "Username", hintText: "Username"),
                         controller: usernameController,

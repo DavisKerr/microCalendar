@@ -1,0 +1,12 @@
+"filename", "language", "Dart", "comment", "blank", "total"
+"/Users/davis/Desktop/SeniorProject/micro_calendar/lib/Actions/account_actions.dart", "Dart", 15, 0, 3, 18
+"/Users/davis/Desktop/SeniorProject/micro_calendar/lib/Actions/event_response_actions.dart", "Dart", 15, 0, 5, 20
+"/Users/davis/Desktop/SeniorProject/micro_calendar/lib/Database/db_helper.dart", "Dart", 8, 0, 0, 8
+"/Users/davis/Desktop/SeniorProject/micro_calendar/lib/Database/db_statements.dart", "Dart", 9, 0, 0, 9
+"/Users/davis/Desktop/SeniorProject/micro_calendar/lib/Middleware/account_middleware.dart", "Dart", 28, 0, 2, 30
+"/Users/davis/Desktop/SeniorProject/micro_calendar/lib/Reducers/Reducer.dart", "Dart", 49, 0, 12, 61
+"/Users/davis/Desktop/SeniorProject/micro_calendar/lib/Screens/sign_in_screen.dart", "Dart", 15, 0, 2, 17
+"/Users/davis/Desktop/SeniorProject/micro_calendar/lib/Screens/sign_up_screen.dart", "Dart", 68, -1, 3, 70
+"/Users/davis/Desktop/SeniorProject/micro_calendar/lib/State/app_state.dart", "Dart", 16, 0, 0, 16
+"/Users/davis/Desktop/SeniorProject/micro_calendar/lib/View/view_model.dart", "Dart", 25, 0, 2, 27
+"Total", "-", 248, -1, 29, 276

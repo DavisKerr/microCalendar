@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:micro_calendar/Actions/db_actions.dart';
+import 'package:micro_calendar/Middleware/api_middleware.dart';
 import 'package:micro_calendar/Middleware/screen_navigation_middleware.dart';
 import 'package:micro_calendar/Screens/activity_log_screen.dart';
 import 'package:micro_calendar/Screens/create_goal_screen.dart';
 import 'package:micro_calendar/Utils/navigator_key.dart';
+import 'package:micro_calendar/Widgets/account_menu_button.dart';
 import 'package:micro_calendar/Widgets/main_app_menu_button.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -36,7 +38,7 @@ class MyApp extends StatelessWidget {
         Store<AppState>(
           appStateReducer, 
           initialState: AppState.empty(),
-          middleware: [accountMiddleware, navigationMiddleware, dbMiddleware, notificationMiddleware],
+          middleware: [accountMiddleware, navigationMiddleware, dbMiddleware, notificationMiddleware, apiMiddleware,],
         );
     return StoreProvider<AppState>(
       store: store,
@@ -88,7 +90,7 @@ class HomePage extends StatelessWidget {
       actions: <Widget>[
         MainAppMenuButton(),
         viewModel.signedIn ? 
-        IconButton(icon: Icon(Icons.person), onPressed: () {}) :
+        AccountMenuButton() :
         TextButton(
           child: Text("Sign In", ), 
           onPressed: () {viewModel.navigateToLoginScreen();}, 

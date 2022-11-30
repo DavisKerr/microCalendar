@@ -1,0 +1,100 @@
+Date : 2022-11-16 13:59:06
+Directory : /Users/davis/Desktop/SeniorProject/micro_calendar/lib
+Total : 61 files,  5232 codes, 161 comments, 668 blanks, all 6061 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| Dart     |         60 |      5,123 |        161 |        661 |      5,945 |
+| SQL      |          1 |        109 |          0 |          7 |        116 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++-------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                                    | files      | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                                       |         61 |      5,232 |        161 |        668 |      6,061 |
+| Actions                                                                                                                 |          6 |        271 |          0 |         68 |        339 |
+| Database                                                                                                                |          3 |        333 |          8 |         41 |        382 |
+| Middleware                                                                                                              |          4 |        385 |         18 |         47 |        450 |
+| Model                                                                                                                   |          3 |         69 |          0 |         11 |         80 |
+| Reducers                                                                                                                |          1 |        384 |          8 |         40 |        432 |
+| Screens                                                                                                                 |          6 |        750 |          5 |         84 |        839 |
+| SpawnPopups                                                                                                             |          1 |         41 |          0 |          6 |         47 |
+| State                                                                                                                   |          1 |         72 |          0 |          7 |         79 |
+| Styles                                                                                                                  |          1 |         40 |          0 |          7 |         47 |
+| Utils                                                                                                                   |          3 |         86 |         12 |         20 |        118 |
+| View                                                                                                                    |          1 |        202 |          1 |         27 |        230 |
+| Widgets                                                                                                                 |         30 |      2,484 |        108 |        289 |      2,881 |
+| Widgets/ActivityLogWidgets                                                                                              |          2 |         77 |         19 |         15 |        111 |
+| Widgets/CreateGoalFormWidgets                                                                                           |         13 |      1,284 |          4 |        118 |      1,406 |
++-------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-------------------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                                                                                | language | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Actions/account_actions.dart                                      | Dart     |         16 |          0 |          7 |         23 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Actions/action.dart                                               | Dart     |          5 |          0 |          1 |          6 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Actions/db_actions.dart                                           | Dart     |        132 |          0 |         28 |        160 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Actions/goal_actions.dart                                         | Dart     |         56 |          0 |         17 |         73 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Actions/navigation_actions.dart                                   | Dart     |         39 |          0 |          9 |         48 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Actions/notification_actions.dart                                 | Dart     |         23 |          0 |          6 |         29 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Database/create_database.sql                                      | SQL      |        109 |          0 |          7 |        116 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Database/db_helper.dart                                           | Dart     |        128 |          8 |         23 |        159 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Database/db_statements.dart                                       | Dart     |         96 |          0 |         11 |        107 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Middleware/account_middleware.dart                                | Dart     |         20 |         18 |          6 |         44 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Middleware/db_middleware.dart                                     | Dart     |        269 |          0 |         24 |        293 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Middleware/notification_middleware.dart                           | Dart     |         22 |          0 |          6 |         28 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Middleware/screen_navigation_middleware.dart                      | Dart     |         74 |          0 |         11 |         85 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Model/goal.dart                                                   | Dart     |         41 |          0 |          5 |         46 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Model/goal_notification.dart                                      | Dart     |         17 |          0 |          3 |         20 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Model/goal_progress.dart                                          | Dart     |         11 |          0 |          3 |         14 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Reducers/Reducer.dart                                             | Dart     |        384 |          8 |         40 |        432 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Screens/activity_log_screen.dart                                  | Dart     |         92 |          1 |         14 |        107 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Screens/completed_goal_screen.dart                                | Dart     |        111 |          0 |         10 |        121 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Screens/create_goal_screen.dart                                   | Dart     |        357 |          3 |         36 |        396 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Screens/sign_in_screen.dart                                       | Dart     |         81 |          0 |         12 |         93 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Screens/sign_up_screen.dart                                       | Dart     |         87 |          1 |         11 |         99 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Screens/splash_screen.dart                                        | Dart     |         22 |          0 |          1 |         23 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/SpawnPopups/spawn_popups.dart                                     | Dart     |         41 |          0 |          6 |         47 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/State/app_state.dart                                              | Dart     |         72 |          0 |          7 |         79 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Styles/app_themes.dart                                            | Dart     |         40 |          0 |          7 |         47 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Utils/date_formatter.dart                                         | Dart     |          4 |          0 |          1 |          5 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Utils/navigator_key.dart                                          | Dart     |          2 |          0 |          1 |          3 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Utils/notification_service.dart                                   | Dart     |         80 |         12 |         18 |        110 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/View/view_model.dart                                              | Dart     |        202 |          1 |         27 |        230 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Widgets/ActivityLogWidgets/progress_box.dart                      | Dart     |         45 |         19 |         12 |         76 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Widgets/ActivityLogWidgets/progress_list.dart                     | Dart     |         32 |          0 |          3 |         35 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Widgets/CreateGoalFormWidgets/create_goal_footer.dart             | Dart     |         59 |          0 |          6 |         65 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Widgets/CreateGoalFormWidgets/create_goal_form_context.dart       | Dart     |         93 |          0 |         11 |        104 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Widgets/CreateGoalFormWidgets/create_goal_form_dates.dart         | Dart     |        131 |          1 |         10 |        142 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Widgets/CreateGoalFormWidgets/create_goal_form_end.dart           | Dart     |         96 |          0 |          7 |        103 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Widgets/CreateGoalFormWidgets/create_goal_form_example.dart       | Dart     |         94 |          0 |          9 |        103 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Widgets/CreateGoalFormWidgets/create_goal_form_introduction.dart  | Dart     |         68 |          1 |          5 |         74 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Widgets/CreateGoalFormWidgets/create_goal_form_measurement.dart   | Dart     |         92 |          0 |          9 |        101 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Widgets/CreateGoalFormWidgets/create_goal_form_mindway_check.dart | Dart     |         75 |          0 |          6 |         81 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Widgets/CreateGoalFormWidgets/create_goal_form_name.dart          | Dart     |         94 |          0 |          9 |        103 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Widgets/CreateGoalFormWidgets/create_goal_form_notifications.dart | Dart     |        218 |          1 |         21 |        240 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Widgets/CreateGoalFormWidgets/create_goal_form_period.dart        | Dart     |         80 |          1 |          7 |         88 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Widgets/CreateGoalFormWidgets/create_goal_form_quantity.dart      | Dart     |         92 |          0 |          9 |        101 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Widgets/CreateGoalFormWidgets/create_goal_form_verb.dart          | Dart     |         92 |          0 |          9 |        101 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Widgets/add_goal_button.dart                                      | Dart     |         24 |          1 |          5 |         30 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Widgets/back_and_next_buttons.dart                                | Dart     |         41 |          0 |          4 |         45 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Widgets/confirmation_window.dart                                  | Dart     |         37 |          0 |          8 |         45 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Widgets/edit_delete_goal_popup.dart                               | Dart     |        164 |          0 |         24 |        188 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Widgets/goal_box.dart                                             | Dart     |        103 |          1 |         11 |        115 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Widgets/goal_screen.dart                                          | Dart     |         53 |          0 |          6 |         59 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Widgets/horizontal_progress_bar.dart                              | Dart     |         33 |          0 |          4 |         37 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Widgets/large_completed_goal_menu_button.dart                     | Dart     |        100 |          0 |         13 |        113 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Widgets/large_goal_menu_button.dart                               | Dart     |        117 |          0 |         14 |        131 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Widgets/main_app_menu_button.dart                                 | Dart     |         40 |          2 |         10 |         52 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Widgets/modify_notification_popup.dart                            | Dart     |        132 |         81 |         24 |        237 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Widgets/number_wheel_selector.dart                                | Dart     |         37 |          0 |          3 |         40 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Widgets/screen_tracker_indicators.dart                            | Dart     |         34 |          0 |          5 |         39 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Widgets/text_popup_menu.dart                                      | Dart     |         35 |          0 |          2 |         37 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/Widgets/track_goal_popup.dart                                     | Dart     |        173 |          0 |         23 |        196 |
+| /Users/davis/Desktop/SeniorProject/micro_calendar/lib/main.dart                                                         | Dart     |        115 |          1 |         21 |        137 |
+| Total                                                                                                                   |          |      5,232 |        161 |        668 |      6,061 |
++-------------------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+

@@ -1,0 +1,11 @@
+"filename", "language", "Dart", "comment", "blank", "total"
+"/Users/davis/Desktop/SeniorProject/micro_calendar/lib/Actions/account_actions.dart", "Dart", 10, 0, 1, 11
+"/Users/davis/Desktop/SeniorProject/micro_calendar/lib/Middleware/account_middleware.dart", "Dart", 27, -9, 5, 23
+"/Users/davis/Desktop/SeniorProject/micro_calendar/lib/Reducers/Reducer.dart", "Dart", 60, 0, 13, 73
+"/Users/davis/Desktop/SeniorProject/micro_calendar/lib/Screens/sign_in_screen.dart", "Dart", 22, 0, 1, 23
+"/Users/davis/Desktop/SeniorProject/micro_calendar/lib/State/app_state.dart", "Dart", 16, 0, 0, 16
+"/Users/davis/Desktop/SeniorProject/micro_calendar/lib/View/view_model.dart", "Dart", 18, 0, 1, 19
+"/Users/davis/Desktop/SeniorProject/micro_calendar/lib/Widgets/account_menu_button.dart", "Dart", 50, 2, 6, 58
+"/Users/davis/Desktop/SeniorProject/micro_calendar/lib/Widgets/loading_indicator.dart", "Dart", 39, 0, 4, 43
+"/Users/davis/Desktop/SeniorProject/micro_calendar/lib/main.dart", "Dart", 1, 0, 0, 1
+"Total", "-", 243, -7, 31, 267

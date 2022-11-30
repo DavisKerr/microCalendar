@@ -19,6 +19,14 @@ class AppState {
   final double maxHeight;
   final double maxWidth;
   final double textScaleFactor;
+  final String token;
+  final bool signInErrors;
+  final String signInErrorMessage;
+  final bool loading;
+  final bool showToast;
+  final String toastMessage;
+  final bool registerErrors;
+  final String registerErrorMessage;
 
   const AppState({
     required this.goalList,
@@ -30,6 +38,14 @@ class AppState {
     this.maxHeight = 0,
     this.maxWidth = 0,
     this.textScaleFactor = 0,
+    this.token = "",
+    this.signInErrors = false,
+    this.signInErrorMessage = "",
+    this.loading = false,
+    this.showToast = false,
+    this.toastMessage = "",
+    this.registerErrors = false,
+    this.registerErrorMessage = ""
   });
 
   const AppState.empty() 
@@ -41,7 +57,15 @@ class AppState {
     notification = const GoalNotification.empty(),
     maxHeight = 0,
     maxWidth = 0,
-    textScaleFactor = 0;
+    textScaleFactor = 0,
+    token = "", 
+    signInErrors = false,
+    signInErrorMessage = "",
+    loading = false,
+    showToast = false,
+    toastMessage = "",
+    registerErrors = false,
+    registerErrorMessage = "";
 
   const AppState.test()
     : goalList = const <Goal>[
@@ -75,5 +99,13 @@ class AppState {
     notification = const GoalNotification.empty(),
     maxHeight = 0,
     maxWidth = 0,
-    textScaleFactor = 0;    
+    textScaleFactor = 0,
+    token = "",
+    signInErrors = false,
+    signInErrorMessage = "",
+    loading = false,
+    showToast = false,
+    toastMessage = "",
+    registerErrors = false,
+    registerErrorMessage = "";   
 }
